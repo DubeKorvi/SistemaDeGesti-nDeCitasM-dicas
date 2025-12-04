@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace CapaPresentacioon
 {
-    public partial class FCalendarioDeCitas : Form
+    public partial class CitasPacientes : Form
     {
-        public FCalendarioDeCitas()
+        public CitasPacientes()
         {
             InitializeComponent();
         }

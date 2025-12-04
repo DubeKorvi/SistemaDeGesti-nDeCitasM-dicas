@@ -1,6 +1,6 @@
 ﻿namespace CapaPresentacioon
 {
-    partial class FSistemaDeNotificaciones
+    partial class VerCitas
     {
         /// <summary>
         /// Required designer variable.
@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "FSistemaDeNotificaciones";
+            this.Text = "VerCitas";
         }
 
         #endregion
