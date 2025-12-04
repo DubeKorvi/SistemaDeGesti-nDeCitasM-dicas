@@ -34,7 +34,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(424, 417);
+            ClientSize = new Size(657, 417);
             Margin = new Padding(2, 2, 2, 2);
             Name = "loguin";
             Text = "Form1";
