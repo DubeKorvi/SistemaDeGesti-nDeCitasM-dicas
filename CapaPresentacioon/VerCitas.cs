@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace CapaPresentacioon
 {
-    public partial class FSistemaDeNotificaciones : Form
+    public partial class VerCitas : Form
     {
-        public FSistemaDeNotificaciones()
+        public VerCitas()
         {
             InitializeComponent();
         }
