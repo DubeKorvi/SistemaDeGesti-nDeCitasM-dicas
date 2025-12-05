@@ -30,8 +30,77 @@ namespace CapaPresentacioon
                 MaterialSkin.Accent.LightBlue200,   // Accent suave estilo Windows 11
                 MaterialSkin.TextShade.WHITE        // Texto blanco para contrastar
             );
+
         }
 
-       
+        private void tabPage3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void materialCard2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void LblDiag_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void materialButton2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void materialTextBox21_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void materialLabel2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnEditarGes_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnCancelarGes_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblBusacarCitAg_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblTelefonoGes_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mtbTelefonoDig_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void materialCard7_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void materialCard10_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }
