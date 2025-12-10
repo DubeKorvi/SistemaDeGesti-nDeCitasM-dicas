@@ -1,3 +1,4 @@
+using CapaNegocio.Clases;
 using MaterialSkin;
 
 
@@ -29,7 +30,8 @@ namespace CapaPresentacioon
             string usuario = tbUsuarioLoguin.Text;
             string clave = tbContrasenaLoguin.Text;
 
-            var resultado = Ncredencial.Login(usuario, clave);
+            Credencial cred = new Credencial();
+            var resultado = cred.Login(usuario, clave);
 
             if (resultado.Rows.Count == 0)
             {
