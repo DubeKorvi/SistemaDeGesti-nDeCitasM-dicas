@@ -19,7 +19,7 @@ namespace CapaNegocio.Clases
         public string Rol { get; set; } // Secretaria, Medico
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
 
-        public class DCredencial
+        private class DCredencial
         {
             public DataTable Login(string usuario, string clave)
             {
