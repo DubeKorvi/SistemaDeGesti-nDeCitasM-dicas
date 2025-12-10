@@ -13,6 +13,9 @@ namespace CapaPresentacioon
 {
     public partial class FMenuPrincipal : MaterialSkin.Controls.MaterialForm
     {
+
+        private string Rol;
+        private IdDoctor;
         public FMenuPrincipal()
         {
             InitializeComponent();
@@ -31,6 +34,44 @@ namespace CapaPresentacioon
                 MaterialSkin.TextShade.WHITE        // Texto blanco para contrastar
             );
 
+
+            Rol = rol;
+            IdDoctor = idDoctor;
+
+            ConfigurarInterfazPorRol();
+        }
+
+
+        private void ConfigurarInterfazPorRol()
+        {
+            if (Rol == "Doctor")
+            {
+                foreach (TabPage tab in materialTabControl1.TabPages)
+                {
+                    // Solo habilitar las que el doctor puede ver
+                    if (tab.Text == "Disponibilidad" ||
+                        tab.Text == "Citas Agendadas" ||
+                        tab.Text == "Diagnosticos")
+                    {
+                        tab.Enabled = true;
+                    }
+                    else
+                    {
+                        tab.Enabled = false;
+                    }
+                }
+            }
+            else if (Rol == "Secretaria")
+            {
+                foreach (TabPage tab in materialTabControl1.TabPages)
+                {
+                    // Secretaria puede ver todo MENOS disponibilidad
+                    if (tab.Text == "Disponibilidad")
+                        tab.Enabled = false;
+                    else
+                        tab.Enabled = true;
+                }
+            }
         }
 
         private void tabPage3_Click(object sender, EventArgs e)
@@ -99,6 +140,11 @@ namespace CapaPresentacioon
         }
 
         private void materialCard10_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void materialLabel10_Click(object sender, EventArgs e)
         {
 
         }
