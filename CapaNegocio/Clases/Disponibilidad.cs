@@ -17,20 +17,21 @@ namespace CapaNegocio.Clases
         public TimeSpan HoraSalida { get; set; }
         public bool EstaDisponible { get; set; } = true;
 
-        public static string GuardarDisponibilidad(int idDoctor, DateTime fecha, TimeSpan horaEntrada, TimeSpan horaSalida)
+        public static string GuardarDisponibilidad(int idDoctor, DateTime fechaEntrada, DateTime fechaSalida, TimeSpan horaEntrada, TimeSpan horaSalida)
         {
             try
             {
                 using (SqlConnection con = new SqlConnection(ConexionBD.Cn))   // ← AQUÍ EL "new"
                 {
                     string query = @"INSERT INTO Disponibilidades 
-                                    (IdDoctor, Fecha, HoraEntrada, HoraSalida, EstaDisponible) 
-                                     VALUES (@IdDoctor, @Fecha, @HoraEntrada, @HoraSalida, @EstaDisponible)";
+                                    (IdDoctor, FechaEntrada, FechaSalida, HoraEntrada, HoraSalida, EstaDisponible) 
+                                     VALUES (@IdDoctor, @FechaEntrada, @FechaSalida, @HoraEntrada, @HoraSalida, @EstaDisponible)";
 
                     SqlCommand cmd = new SqlCommand(query, con);
 
                     cmd.Parameters.AddWithValue("@IdDoctor", idDoctor);
-                    cmd.Parameters.AddWithValue("@Fecha", fecha);
+                    cmd.Parameters.AddWithValue("@FechaEntrada", fechaEntrada);
+                    cmd.Parameters.AddWithValue("@FechaSalida", fechaSalida);
                     cmd.Parameters.AddWithValue("@HoraEntrada", horaEntrada);
                     cmd.Parameters.AddWithValue("@HoraSalida", horaSalida);
                     cmd.Parameters.AddWithValue("@EstaDisponible", true);
