@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MaterialSkin;
-using CapaNegocio;
+using CapaNegocio.Clases;
 
 namespace CapaPresentacioon
 {
@@ -40,9 +40,10 @@ namespace CapaPresentacioon
             IdDoctor = idDoctor;
 
             ConfigurarInterfazPorRol();
+            CargarDoctores();
         }
 
-
+        //TODO Metodo para la intefaz por rol
         private void ConfigurarInterfazPorRol()
         {
             if (Rol == "Doctor")
@@ -73,6 +74,16 @@ namespace CapaPresentacioon
                         tab.Enabled = true;
                 }
             }
+        }
+
+        //TODO Metodo para cargar los doctores en el combobox
+        private void CargarDoctores()
+        {
+            var dt = Doctor.ObtenerDoctores();
+
+            cbDoctorDis.DataSource = dt;
+            cbDoctorDis.DisplayMember = "Nombre";
+            cbDoctorDis.ValueMember = "IdDoctor";
         }
 
         private void tabPage3_Click(object sender, EventArgs e)
@@ -147,6 +158,28 @@ namespace CapaPresentacioon
 
         private void materialLabel10_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void btnGuardarDis_Click(object sender, EventArgs e)
+        {
+            int idDoctor = Convert.ToInt32(cbDoctorDis.SelectedValue);
+            DateTime fechaEntrada = dtpDiasEntraDis.Value;
+            DateTime fechaSalida = dtpDiasSaliDis.Value;
+
+            TimeSpan horaEntrada = dtpHoraEntDis.Value.TimeOfDay;
+            TimeSpan horaSalida = dtpHoraSalDis.Value.TimeOfDay;
+
+            string respuesta = Disponibilidad.GuardarDisponibilidad(idDoctor, fechaEntrada, fechaSalida, horaEntrada, horaSalida);
+
+            if (respuesta == "OK")
+            {
+                MessageBox.Show("Disponibilidad guardada correctamente.");
+            }
+            else
+            {
+                MessageBox.Show("Error al guardar la disponibilidad: " + respuesta);
+            }
 
         }
     }

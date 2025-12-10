@@ -72,7 +72,7 @@
             cbDoctorDis = new MaterialSkin.Controls.MaterialComboBox();
             materialLabel8 = new MaterialSkin.Controls.MaterialLabel();
             materialCard9 = new MaterialSkin.Controls.MaterialCard();
-            dateTimePicker2 = new DateTimePicker();
+            dtpDiasSaliDis = new DateTimePicker();
             materialCard11 = new MaterialSkin.Controls.MaterialCard();
             materialLabel10 = new MaterialSkin.Controls.MaterialLabel();
             materialCard8 = new MaterialSkin.Controls.MaterialCard();
@@ -83,7 +83,7 @@
             materialLabel6 = new MaterialSkin.Controls.MaterialLabel();
             dtpHoraSalDis = new DateTimePicker();
             dtpHoraEntDis = new DateTimePicker();
-            dtpDiasDis = new DateTimePicker();
+            dtpDiasEntraDis = new DateTimePicker();
             btnGuardarDis = new MaterialSkin.Controls.MaterialButton();
             materialCard7 = new MaterialSkin.Controls.MaterialCard();
             materialLabel4 = new MaterialSkin.Controls.MaterialLabel();
@@ -825,14 +825,14 @@
             // materialCard9
             // 
             materialCard9.BackColor = Color.FromArgb(255, 255, 255);
-            materialCard9.Controls.Add(dateTimePicker2);
+            materialCard9.Controls.Add(dtpDiasSaliDis);
             materialCard9.Controls.Add(materialCard11);
             materialCard9.Controls.Add(materialCard8);
             materialCard9.Controls.Add(materialCard5);
             materialCard9.Controls.Add(materialCard6);
             materialCard9.Controls.Add(dtpHoraSalDis);
             materialCard9.Controls.Add(dtpHoraEntDis);
-            materialCard9.Controls.Add(dtpDiasDis);
+            materialCard9.Controls.Add(dtpDiasEntraDis);
             materialCard9.Depth = 0;
             materialCard9.ForeColor = Color.FromArgb(222, 0, 0, 0);
             materialCard9.Location = new Point(153, 261);
@@ -843,12 +843,12 @@
             materialCard9.Size = new Size(885, 260);
             materialCard9.TabIndex = 8;
             // 
-            // dateTimePicker2
+            // dtpDiasSaliDis
             // 
-            dateTimePicker2.Location = new Point(88, 177);
-            dateTimePicker2.Name = "dateTimePicker2";
-            dateTimePicker2.Size = new Size(300, 31);
-            dateTimePicker2.TabIndex = 8;
+            dtpDiasSaliDis.Location = new Point(88, 177);
+            dtpDiasSaliDis.Name = "dtpDiasSaliDis";
+            dtpDiasSaliDis.Size = new Size(300, 31);
+            dtpDiasSaliDis.TabIndex = 8;
             // 
             // materialCard11
             // 
@@ -973,12 +973,12 @@
             dtpHoraEntDis.Size = new Size(300, 31);
             dtpHoraEntDis.TabIndex = 6;
             // 
-            // dtpDiasDis
+            // dtpDiasEntraDis
             // 
-            dtpDiasDis.Location = new Point(88, 73);
-            dtpDiasDis.Name = "dtpDiasDis";
-            dtpDiasDis.Size = new Size(300, 31);
-            dtpDiasDis.TabIndex = 5;
+            dtpDiasEntraDis.Location = new Point(88, 73);
+            dtpDiasEntraDis.Name = "dtpDiasEntraDis";
+            dtpDiasEntraDis.Size = new Size(300, 31);
+            dtpDiasEntraDis.TabIndex = 5;
             // 
             // btnGuardarDis
             // 
@@ -998,6 +998,7 @@
             btnGuardarDis.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnGuardarDis.UseAccentColor = false;
             btnGuardarDis.UseVisualStyleBackColor = true;
+            btnGuardarDis.Click += btnGuardarDis_Click;
             // 
             // materialCard7
             // 
@@ -1229,7 +1230,7 @@
         private MaterialSkin.Controls.MaterialButton btnGuardarDis;
         private DateTimePicker dtpHoraSalDis;
         private DateTimePicker dtpHoraEntDis;
-        private DateTimePicker dtpDiasDis;
+        private DateTimePicker dtpDiasEntraDis;
         private MaterialSkin.Controls.MaterialCard materialCard8;
         private MaterialSkin.Controls.MaterialLabel materialLabel7;
         private MaterialSkin.Controls.MaterialCard materialCard5;
@@ -1247,6 +1248,6 @@
         private MaterialSkin.Controls.MaterialButton btnBuscarDig;
         private MaterialSkin.Controls.MaterialCard materialCard11;
         private MaterialSkin.Controls.MaterialLabel materialLabel10;
-        private DateTimePicker dateTimePicker2;
+        private DateTimePicker dtpDiasSaliDis;
     }
 }
