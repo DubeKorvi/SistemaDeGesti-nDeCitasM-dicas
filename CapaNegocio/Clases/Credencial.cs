@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
-using CapaDatos;
+//using CapaDatos;
+using Microsoft.Data.SqlClient;
+using SistemaDeGestionDeCitasMedicas;
 
 namespace CapaNegocio.Clases
 {
@@ -17,6 +19,24 @@ namespace CapaNegocio.Clases
         public string Rol { get; set; } // Secretaria, Medico
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
 
+        public class DCredencial
+        {
+            public DataTable Login(string usuario, string clave)
+            {
+                using (SqlConnection con = new SqlConnection(ConexionBD.Cn))
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Credencial WHERE Usuario=@u AND Clave=@c", con);
+                    cmd.Parameters.AddWithValue("@u", usuario);
+                    cmd.Parameters.AddWithValue("@c", clave);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+
+                    da.Fill(dt);
+                    return dt;
+                }
+            }
+        }
         public DataTable Login(string usuario, string clave)
         {
             DCredencial d = new DCredencial();

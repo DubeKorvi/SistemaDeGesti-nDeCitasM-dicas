@@ -69,9 +69,12 @@
             dataGridView1 = new DataGridView();
             tabPage4 = new TabPage();
             materialCard10 = new MaterialSkin.Controls.MaterialCard();
-            materialComboBox1 = new MaterialSkin.Controls.MaterialComboBox();
+            cbDoctorDis = new MaterialSkin.Controls.MaterialComboBox();
             materialLabel8 = new MaterialSkin.Controls.MaterialLabel();
             materialCard9 = new MaterialSkin.Controls.MaterialCard();
+            dateTimePicker2 = new DateTimePicker();
+            materialCard11 = new MaterialSkin.Controls.MaterialCard();
+            materialLabel10 = new MaterialSkin.Controls.MaterialLabel();
             materialCard8 = new MaterialSkin.Controls.MaterialCard();
             materialLabel7 = new MaterialSkin.Controls.MaterialLabel();
             materialCard5 = new MaterialSkin.Controls.MaterialCard();
@@ -91,9 +94,6 @@
             lblNombreCitAg = new MaterialSkin.Controls.MaterialLabel();
             lblBusacarCitAg = new MaterialSkin.Controls.MaterialLabel();
             dataGridView3 = new DataGridView();
-            materialCard11 = new MaterialSkin.Controls.MaterialCard();
-            materialLabel10 = new MaterialSkin.Controls.MaterialLabel();
-            dateTimePicker2 = new DateTimePicker();
             materialTabControl1.SuspendLayout();
             tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -107,6 +107,7 @@
             tabPage4.SuspendLayout();
             materialCard10.SuspendLayout();
             materialCard9.SuspendLayout();
+            materialCard11.SuspendLayout();
             materialCard8.SuspendLayout();
             materialCard5.SuspendLayout();
             materialCard6.SuspendLayout();
@@ -114,7 +115,6 @@
             tabPage5.SuspendLayout();
             materialCard4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView3).BeginInit();
-            materialCard11.SuspendLayout();
             SuspendLayout();
             // 
             // materialTabControl1
@@ -775,7 +775,7 @@
             // materialCard10
             // 
             materialCard10.BackColor = Color.FromArgb(255, 255, 255);
-            materialCard10.Controls.Add(materialComboBox1);
+            materialCard10.Controls.Add(cbDoctorDis);
             materialCard10.Controls.Add(materialLabel8);
             materialCard10.Depth = 0;
             materialCard10.ForeColor = Color.FromArgb(222, 0, 0, 0);
@@ -788,27 +788,27 @@
             materialCard10.TabIndex = 9;
             materialCard10.Paint += materialCard10_Paint;
             // 
-            // materialComboBox1
+            // cbDoctorDis
             // 
-            materialComboBox1.AutoResize = false;
-            materialComboBox1.BackColor = Color.FromArgb(255, 255, 255);
-            materialComboBox1.Depth = 0;
-            materialComboBox1.DrawMode = DrawMode.OwnerDrawVariable;
-            materialComboBox1.DropDownHeight = 174;
-            materialComboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-            materialComboBox1.DropDownWidth = 121;
-            materialComboBox1.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
-            materialComboBox1.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            materialComboBox1.FormattingEnabled = true;
-            materialComboBox1.IntegralHeight = false;
-            materialComboBox1.ItemHeight = 43;
-            materialComboBox1.Location = new Point(68, 34);
-            materialComboBox1.MaxDropDownItems = 4;
-            materialComboBox1.MouseState = MaterialSkin.MouseState.OUT;
-            materialComboBox1.Name = "materialComboBox1";
-            materialComboBox1.Size = new Size(182, 49);
-            materialComboBox1.StartIndex = 0;
-            materialComboBox1.TabIndex = 1;
+            cbDoctorDis.AutoResize = false;
+            cbDoctorDis.BackColor = Color.FromArgb(255, 255, 255);
+            cbDoctorDis.Depth = 0;
+            cbDoctorDis.DrawMode = DrawMode.OwnerDrawVariable;
+            cbDoctorDis.DropDownHeight = 174;
+            cbDoctorDis.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbDoctorDis.DropDownWidth = 121;
+            cbDoctorDis.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
+            cbDoctorDis.ForeColor = Color.FromArgb(222, 0, 0, 0);
+            cbDoctorDis.FormattingEnabled = true;
+            cbDoctorDis.IntegralHeight = false;
+            cbDoctorDis.ItemHeight = 43;
+            cbDoctorDis.Location = new Point(68, 34);
+            cbDoctorDis.MaxDropDownItems = 4;
+            cbDoctorDis.MouseState = MaterialSkin.MouseState.OUT;
+            cbDoctorDis.Name = "cbDoctorDis";
+            cbDoctorDis.Size = new Size(182, 49);
+            cbDoctorDis.StartIndex = 0;
+            cbDoctorDis.TabIndex = 1;
             // 
             // materialLabel8
             // 
@@ -842,6 +842,40 @@
             materialCard9.Padding = new Padding(14);
             materialCard9.Size = new Size(885, 260);
             materialCard9.TabIndex = 8;
+            // 
+            // dateTimePicker2
+            // 
+            dateTimePicker2.Location = new Point(88, 177);
+            dateTimePicker2.Name = "dateTimePicker2";
+            dateTimePicker2.Size = new Size(300, 31);
+            dateTimePicker2.TabIndex = 8;
+            // 
+            // materialCard11
+            // 
+            materialCard11.BackColor = Color.FromArgb(255, 255, 255);
+            materialCard11.Controls.Add(materialLabel10);
+            materialCard11.Depth = 0;
+            materialCard11.ForeColor = Color.FromArgb(222, 0, 0, 0);
+            materialCard11.Location = new Point(98, 121);
+            materialCard11.Margin = new Padding(14);
+            materialCard11.MouseState = MaterialSkin.MouseState.HOVER;
+            materialCard11.Name = "materialCard11";
+            materialCard11.Padding = new Padding(14);
+            materialCard11.Size = new Size(269, 39);
+            materialCard11.TabIndex = 5;
+            // 
+            // materialLabel10
+            // 
+            materialLabel10.AutoSize = true;
+            materialLabel10.Depth = 0;
+            materialLabel10.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            materialLabel10.Location = new Point(43, 10);
+            materialLabel10.MouseState = MaterialSkin.MouseState.HOVER;
+            materialLabel10.Name = "materialLabel10";
+            materialLabel10.Size = new Size(171, 19);
+            materialLabel10.TabIndex = 2;
+            materialLabel10.Text = "Seleccione dia de salida";
+            materialLabel10.Click += materialLabel10_Click;
             // 
             // materialCard8
             // 
@@ -926,6 +960,7 @@
             dtpHoraSalDis.Format = DateTimePickerFormat.Time;
             dtpHoraSalDis.Location = new Point(516, 177);
             dtpHoraSalDis.Name = "dtpHoraSalDis";
+            dtpHoraSalDis.ShowUpDown = true;
             dtpHoraSalDis.Size = new Size(300, 31);
             dtpHoraSalDis.TabIndex = 7;
             // 
@@ -934,6 +969,7 @@
             dtpHoraEntDis.Format = DateTimePickerFormat.Time;
             dtpHoraEntDis.Location = new Point(516, 73);
             dtpHoraEntDis.Name = "dtpHoraEntDis";
+            dtpHoraEntDis.ShowUpDown = true;
             dtpHoraEntDis.Size = new Size(300, 31);
             dtpHoraEntDis.TabIndex = 6;
             // 
@@ -1100,40 +1136,6 @@
             dataGridView3.Size = new Size(764, 381);
             dataGridView3.TabIndex = 0;
             // 
-            // materialCard11
-            // 
-            materialCard11.BackColor = Color.FromArgb(255, 255, 255);
-            materialCard11.Controls.Add(materialLabel10);
-            materialCard11.Depth = 0;
-            materialCard11.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            materialCard11.Location = new Point(98, 121);
-            materialCard11.Margin = new Padding(14);
-            materialCard11.MouseState = MaterialSkin.MouseState.HOVER;
-            materialCard11.Name = "materialCard11";
-            materialCard11.Padding = new Padding(14);
-            materialCard11.Size = new Size(269, 39);
-            materialCard11.TabIndex = 5;
-            // 
-            // materialLabel10
-            // 
-            materialLabel10.AutoSize = true;
-            materialLabel10.Depth = 0;
-            materialLabel10.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel10.Location = new Point(43, 10);
-            materialLabel10.MouseState = MaterialSkin.MouseState.HOVER;
-            materialLabel10.Name = "materialLabel10";
-            materialLabel10.Size = new Size(171, 19);
-            materialLabel10.TabIndex = 2;
-            materialLabel10.Text = "Seleccione dia de salida";
-            materialLabel10.Click += materialLabel10_Click;
-            // 
-            // dateTimePicker2
-            // 
-            dateTimePicker2.Location = new Point(88, 177);
-            dateTimePicker2.Name = "dateTimePicker2";
-            dateTimePicker2.Size = new Size(300, 31);
-            dateTimePicker2.TabIndex = 8;
-            // 
             // FMenuPrincipal
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -1162,6 +1164,8 @@
             materialCard10.ResumeLayout(false);
             materialCard10.PerformLayout();
             materialCard9.ResumeLayout(false);
+            materialCard11.ResumeLayout(false);
+            materialCard11.PerformLayout();
             materialCard8.ResumeLayout(false);
             materialCard8.PerformLayout();
             materialCard5.ResumeLayout(false);
@@ -1174,8 +1178,6 @@
             materialCard4.ResumeLayout(false);
             materialCard4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView3).EndInit();
-            materialCard11.ResumeLayout(false);
-            materialCard11.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1237,7 +1239,7 @@
         private MaterialSkin.Controls.MaterialCard materialCard10;
         private MaterialSkin.Controls.MaterialLabel materialLabel8;
         private MaterialSkin.Controls.MaterialCard materialCard9;
-        private MaterialSkin.Controls.MaterialComboBox materialComboBox1;
+        private MaterialSkin.Controls.MaterialComboBox cbDoctorDis;
         private DateTimePicker dtpHoraGes;
         private MaterialSkin.Controls.MaterialLabel materialLabel9;
         private MaterialSkin.Controls.MaterialButton btnGuardarGes;
