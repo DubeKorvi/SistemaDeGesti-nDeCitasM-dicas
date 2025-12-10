@@ -33,6 +33,7 @@
             tabPage3 = new TabPage();
             pictureBox1 = new PictureBox();
             tabPage1 = new TabPage();
+            btnGuardarGes = new MaterialSkin.Controls.MaterialButton();
             btnCancelarGes = new MaterialSkin.Controls.MaterialButton();
             btnAgendarGes = new MaterialSkin.Controls.MaterialButton();
             btnEditarGes = new MaterialSkin.Controls.MaterialButton();
@@ -52,6 +53,8 @@
             materialCard2 = new MaterialSkin.Controls.MaterialCard();
             LblDiag = new MaterialSkin.Controls.MaterialLabel();
             materialCard1 = new MaterialSkin.Controls.MaterialCard();
+            btnBuscarDig = new MaterialSkin.Controls.MaterialButton();
+            btnFiltrarDig = new MaterialSkin.Controls.MaterialButton();
             mtbTelefonoDig = new MaterialSkin.Controls.MaterialMaskedTextBox();
             lblTelefonoGes = new MaterialSkin.Controls.MaterialLabel();
             dateTimePicker1 = new DateTimePicker();
@@ -88,9 +91,9 @@
             lblNombreCitAg = new MaterialSkin.Controls.MaterialLabel();
             lblBusacarCitAg = new MaterialSkin.Controls.MaterialLabel();
             dataGridView3 = new DataGridView();
-            btnGuardarGes = new MaterialSkin.Controls.MaterialButton();
-            btnFiltrarDig = new MaterialSkin.Controls.MaterialButton();
-            btnBuscarDig = new MaterialSkin.Controls.MaterialButton();
+            materialCard11 = new MaterialSkin.Controls.MaterialCard();
+            materialLabel10 = new MaterialSkin.Controls.MaterialLabel();
+            dateTimePicker2 = new DateTimePicker();
             materialTabControl1.SuspendLayout();
             tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -111,6 +114,7 @@
             tabPage5.SuspendLayout();
             materialCard4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView3).BeginInit();
+            materialCard11.SuspendLayout();
             SuspendLayout();
             // 
             // materialTabControl1
@@ -166,6 +170,25 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Gestion de citas";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnGuardarGes
+            // 
+            btnGuardarGes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnGuardarGes.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            btnGuardarGes.Depth = 0;
+            btnGuardarGes.HighEmphasis = true;
+            btnGuardarGes.Icon = null;
+            btnGuardarGes.Location = new Point(453, 517);
+            btnGuardarGes.Margin = new Padding(4, 6, 4, 6);
+            btnGuardarGes.MouseState = MaterialSkin.MouseState.HOVER;
+            btnGuardarGes.Name = "btnGuardarGes";
+            btnGuardarGes.NoAccentTextColor = Color.Empty;
+            btnGuardarGes.Size = new Size(88, 36);
+            btnGuardarGes.TabIndex = 5;
+            btnGuardarGes.Text = "Guardar";
+            btnGuardarGes.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            btnGuardarGes.UseAccentColor = false;
+            btnGuardarGes.UseVisualStyleBackColor = true;
             // 
             // btnCancelarGes
             // 
@@ -480,6 +503,44 @@
             materialCard1.Size = new Size(429, 571);
             materialCard1.TabIndex = 1;
             // 
+            // btnBuscarDig
+            // 
+            btnBuscarDig.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnBuscarDig.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            btnBuscarDig.Depth = 0;
+            btnBuscarDig.HighEmphasis = true;
+            btnBuscarDig.Icon = null;
+            btnBuscarDig.Location = new Point(320, 494);
+            btnBuscarDig.Margin = new Padding(4, 6, 4, 6);
+            btnBuscarDig.MouseState = MaterialSkin.MouseState.HOVER;
+            btnBuscarDig.Name = "btnBuscarDig";
+            btnBuscarDig.NoAccentTextColor = Color.Empty;
+            btnBuscarDig.Size = new Size(77, 36);
+            btnBuscarDig.TabIndex = 13;
+            btnBuscarDig.Text = "Buscar";
+            btnBuscarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            btnBuscarDig.UseAccentColor = false;
+            btnBuscarDig.UseVisualStyleBackColor = true;
+            // 
+            // btnFiltrarDig
+            // 
+            btnFiltrarDig.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnFiltrarDig.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            btnFiltrarDig.Depth = 0;
+            btnFiltrarDig.HighEmphasis = true;
+            btnFiltrarDig.Icon = null;
+            btnFiltrarDig.Location = new Point(128, 494);
+            btnFiltrarDig.Margin = new Padding(4, 6, 4, 6);
+            btnFiltrarDig.MouseState = MaterialSkin.MouseState.HOVER;
+            btnFiltrarDig.Name = "btnFiltrarDig";
+            btnFiltrarDig.NoAccentTextColor = Color.Empty;
+            btnFiltrarDig.Size = new Size(79, 36);
+            btnFiltrarDig.TabIndex = 12;
+            btnFiltrarDig.Text = "Filtrar";
+            btnFiltrarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            btnFiltrarDig.UseAccentColor = false;
+            btnFiltrarDig.UseVisualStyleBackColor = true;
+            // 
             // mtbTelefonoDig
             // 
             mtbTelefonoDig.AllowPromptAsInput = true;
@@ -718,7 +779,7 @@
             materialCard10.Controls.Add(materialLabel8);
             materialCard10.Depth = 0;
             materialCard10.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            materialCard10.Location = new Point(39, 113);
+            materialCard10.Location = new Point(153, 113);
             materialCard10.Margin = new Padding(14);
             materialCard10.MouseState = MaterialSkin.MouseState.HOVER;
             materialCard10.Name = "materialCard10";
@@ -764,6 +825,8 @@
             // materialCard9
             // 
             materialCard9.BackColor = Color.FromArgb(255, 255, 255);
+            materialCard9.Controls.Add(dateTimePicker2);
+            materialCard9.Controls.Add(materialCard11);
             materialCard9.Controls.Add(materialCard8);
             materialCard9.Controls.Add(materialCard5);
             materialCard9.Controls.Add(materialCard6);
@@ -772,12 +835,12 @@
             materialCard9.Controls.Add(dtpDiasDis);
             materialCard9.Depth = 0;
             materialCard9.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            materialCard9.Location = new Point(39, 261);
+            materialCard9.Location = new Point(153, 261);
             materialCard9.Margin = new Padding(14);
             materialCard9.MouseState = MaterialSkin.MouseState.HOVER;
             materialCard9.Name = "materialCard9";
             materialCard9.Padding = new Padding(14);
-            materialCard9.Size = new Size(1193, 260);
+            materialCard9.Size = new Size(885, 260);
             materialCard9.TabIndex = 8;
             // 
             // materialCard8
@@ -786,7 +849,7 @@
             materialCard8.Controls.Add(materialLabel7);
             materialCard8.Depth = 0;
             materialCard8.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            materialCard8.Location = new Point(827, 89);
+            materialCard8.Location = new Point(536, 121);
             materialCard8.Margin = new Padding(14);
             materialCard8.MouseState = MaterialSkin.MouseState.HOVER;
             materialCard8.Name = "materialCard8";
@@ -812,7 +875,7 @@
             materialCard5.Controls.Add(materialLabel5);
             materialCard5.Depth = 0;
             materialCard5.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            materialCard5.Location = new Point(470, 89);
+            materialCard5.Location = new Point(536, 17);
             materialCard5.Margin = new Padding(14);
             materialCard5.MouseState = MaterialSkin.MouseState.HOVER;
             materialCard5.Name = "materialCard5";
@@ -838,7 +901,7 @@
             materialCard6.Controls.Add(materialLabel6);
             materialCard6.Depth = 0;
             materialCard6.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            materialCard6.Location = new Point(92, 89);
+            materialCard6.Location = new Point(98, 17);
             materialCard6.Margin = new Padding(14);
             materialCard6.MouseState = MaterialSkin.MouseState.HOVER;
             materialCard6.Name = "materialCard6";
@@ -851,17 +914,17 @@
             materialLabel6.AutoSize = true;
             materialLabel6.Depth = 0;
             materialLabel6.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel6.Location = new Point(33, 10);
+            materialLabel6.Location = new Point(43, 10);
             materialLabel6.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel6.Name = "materialLabel6";
-            materialLabel6.Size = new Size(200, 19);
+            materialLabel6.Size = new Size(182, 19);
             materialLabel6.TabIndex = 2;
-            materialLabel6.Text = "Seleccione Dias Disponibles";
+            materialLabel6.Text = "Seleccione dia de entrada";
             // 
             // dtpHoraSalDis
             // 
             dtpHoraSalDis.Format = DateTimePickerFormat.Time;
-            dtpHoraSalDis.Location = new Point(813, 145);
+            dtpHoraSalDis.Location = new Point(516, 177);
             dtpHoraSalDis.Name = "dtpHoraSalDis";
             dtpHoraSalDis.Size = new Size(300, 31);
             dtpHoraSalDis.TabIndex = 7;
@@ -869,14 +932,14 @@
             // dtpHoraEntDis
             // 
             dtpHoraEntDis.Format = DateTimePickerFormat.Time;
-            dtpHoraEntDis.Location = new Point(453, 145);
+            dtpHoraEntDis.Location = new Point(516, 73);
             dtpHoraEntDis.Name = "dtpHoraEntDis";
             dtpHoraEntDis.Size = new Size(300, 31);
             dtpHoraEntDis.TabIndex = 6;
             // 
             // dtpDiasDis
             // 
-            dtpDiasDis.Location = new Point(83, 145);
+            dtpDiasDis.Location = new Point(88, 73);
             dtpDiasDis.Name = "dtpDiasDis";
             dtpDiasDis.Size = new Size(300, 31);
             dtpDiasDis.TabIndex = 5;
@@ -888,7 +951,7 @@
             btnGuardarDis.Depth = 0;
             btnGuardarDis.HighEmphasis = true;
             btnGuardarDis.Icon = null;
-            btnGuardarDis.Location = new Point(39, 541);
+            btnGuardarDis.Location = new Point(153, 541);
             btnGuardarDis.Margin = new Padding(4, 6, 4, 6);
             btnGuardarDis.MouseState = MaterialSkin.MouseState.HOVER;
             btnGuardarDis.Name = "btnGuardarDis";
@@ -906,7 +969,7 @@
             materialCard7.Controls.Add(materialLabel4);
             materialCard7.Depth = 0;
             materialCard7.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            materialCard7.Location = new Point(39, 29);
+            materialCard7.Location = new Point(153, 41);
             materialCard7.Margin = new Padding(14);
             materialCard7.MouseState = MaterialSkin.MouseState.HOVER;
             materialCard7.Name = "materialCard7";
@@ -1037,62 +1100,39 @@
             dataGridView3.Size = new Size(764, 381);
             dataGridView3.TabIndex = 0;
             // 
-            // btnGuardarGes
+            // materialCard11
             // 
-            btnGuardarGes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnGuardarGes.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            btnGuardarGes.Depth = 0;
-            btnGuardarGes.HighEmphasis = true;
-            btnGuardarGes.Icon = null;
-            btnGuardarGes.Location = new Point(453, 517);
-            btnGuardarGes.Margin = new Padding(4, 6, 4, 6);
-            btnGuardarGes.MouseState = MaterialSkin.MouseState.HOVER;
-            btnGuardarGes.Name = "btnGuardarGes";
-            btnGuardarGes.NoAccentTextColor = Color.Empty;
-            btnGuardarGes.Size = new Size(88, 36);
-            btnGuardarGes.TabIndex = 5;
-            btnGuardarGes.Text = "Guardar";
-            btnGuardarGes.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            btnGuardarGes.UseAccentColor = false;
-            btnGuardarGes.UseVisualStyleBackColor = true;
+            materialCard11.BackColor = Color.FromArgb(255, 255, 255);
+            materialCard11.Controls.Add(materialLabel10);
+            materialCard11.Depth = 0;
+            materialCard11.ForeColor = Color.FromArgb(222, 0, 0, 0);
+            materialCard11.Location = new Point(98, 121);
+            materialCard11.Margin = new Padding(14);
+            materialCard11.MouseState = MaterialSkin.MouseState.HOVER;
+            materialCard11.Name = "materialCard11";
+            materialCard11.Padding = new Padding(14);
+            materialCard11.Size = new Size(269, 39);
+            materialCard11.TabIndex = 5;
             // 
-            // btnFiltrarDig
+            // materialLabel10
             // 
-            btnFiltrarDig.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnFiltrarDig.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            btnFiltrarDig.Depth = 0;
-            btnFiltrarDig.HighEmphasis = true;
-            btnFiltrarDig.Icon = null;
-            btnFiltrarDig.Location = new Point(128, 494);
-            btnFiltrarDig.Margin = new Padding(4, 6, 4, 6);
-            btnFiltrarDig.MouseState = MaterialSkin.MouseState.HOVER;
-            btnFiltrarDig.Name = "btnFiltrarDig";
-            btnFiltrarDig.NoAccentTextColor = Color.Empty;
-            btnFiltrarDig.Size = new Size(79, 36);
-            btnFiltrarDig.TabIndex = 12;
-            btnFiltrarDig.Text = "Filtrar";
-            btnFiltrarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            btnFiltrarDig.UseAccentColor = false;
-            btnFiltrarDig.UseVisualStyleBackColor = true;
+            materialLabel10.AutoSize = true;
+            materialLabel10.Depth = 0;
+            materialLabel10.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            materialLabel10.Location = new Point(43, 10);
+            materialLabel10.MouseState = MaterialSkin.MouseState.HOVER;
+            materialLabel10.Name = "materialLabel10";
+            materialLabel10.Size = new Size(171, 19);
+            materialLabel10.TabIndex = 2;
+            materialLabel10.Text = "Seleccione dia de salida";
+            materialLabel10.Click += materialLabel10_Click;
             // 
-            // btnBuscarDig
+            // dateTimePicker2
             // 
-            btnBuscarDig.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnBuscarDig.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            btnBuscarDig.Depth = 0;
-            btnBuscarDig.HighEmphasis = true;
-            btnBuscarDig.Icon = null;
-            btnBuscarDig.Location = new Point(320, 494);
-            btnBuscarDig.Margin = new Padding(4, 6, 4, 6);
-            btnBuscarDig.MouseState = MaterialSkin.MouseState.HOVER;
-            btnBuscarDig.Name = "btnBuscarDig";
-            btnBuscarDig.NoAccentTextColor = Color.Empty;
-            btnBuscarDig.Size = new Size(77, 36);
-            btnBuscarDig.TabIndex = 13;
-            btnBuscarDig.Text = "Buscar";
-            btnBuscarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            btnBuscarDig.UseAccentColor = false;
-            btnBuscarDig.UseVisualStyleBackColor = true;
+            dateTimePicker2.Location = new Point(88, 177);
+            dateTimePicker2.Name = "dateTimePicker2";
+            dateTimePicker2.Size = new Size(300, 31);
+            dateTimePicker2.TabIndex = 8;
             // 
             // FMenuPrincipal
             // 
@@ -1134,6 +1174,8 @@
             materialCard4.ResumeLayout(false);
             materialCard4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView3).EndInit();
+            materialCard11.ResumeLayout(false);
+            materialCard11.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1201,5 +1243,8 @@
         private MaterialSkin.Controls.MaterialButton btnGuardarGes;
         private MaterialSkin.Controls.MaterialButton btnFiltrarDig;
         private MaterialSkin.Controls.MaterialButton btnBuscarDig;
+        private MaterialSkin.Controls.MaterialCard materialCard11;
+        private MaterialSkin.Controls.MaterialLabel materialLabel10;
+        private DateTimePicker dateTimePicker2;
     }
 }

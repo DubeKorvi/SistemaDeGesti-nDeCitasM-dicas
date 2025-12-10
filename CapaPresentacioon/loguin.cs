@@ -23,5 +23,28 @@ namespace CapaPresentacioon
                 MaterialSkin.TextShade.WHITE        // Texto blanco para contrastar
             );
         }
+
+        private void materialButton1_Click(object sender, EventArgs e)
+        {
+            string usuario = tbUsuarioLoguin.Text;
+            string clave = tbContrasenaLoguin.Text;
+
+            var resultado = Ncredencial.Login(usuario, clave);
+
+            if (resultado.Rows.Count == 0)
+            {
+                MessageBox.Show("Usuario o Contraseña incorrectos");
+                    return;
+            }
+
+            string rol = resultado.Rows[0]["Rol"].ToString();
+            int idDoctor = resultado.Rows[0]["IdDoctor"] != DBNull.Value ? Convert.ToInt32(resultado.Rows[0]["IdDoctor"]) : 0;
+
+            FMenuPrincipal mp = new FMenuPrincipal(rol, idDoctor);
+
+            mp.Show();
+
+            this.Hide();
+        }
     }
 }
