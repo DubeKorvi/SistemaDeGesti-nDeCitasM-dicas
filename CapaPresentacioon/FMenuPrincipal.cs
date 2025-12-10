@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MaterialSkin;
+using CapaNegocio;
 
 namespace CapaPresentacioon
 {
@@ -15,8 +16,8 @@ namespace CapaPresentacioon
     {
 
         private string Rol;
-        private IdDoctor;
-        public FMenuPrincipal()
+        private int IdDoctor;
+        public FMenuPrincipal(string rol, int idDoctor)
         {
             InitializeComponent();
 

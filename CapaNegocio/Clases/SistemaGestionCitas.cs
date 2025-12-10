@@ -47,10 +47,6 @@ namespace CapaNegocio.Clases
         // Implementación de IAgendable
 
     
-        /// Agenda una nueva cita médica.
-        /// <returns>True si la cita se agendó correctamente, False en caso contrario</returns>
-        /// <exception cref="HorarioNoDisponibleException">Se lanza cuando el doctor no está disponible en el horario solicitado</exception>
-        /// <exception cref="CitaDuplicadaException">Se lanza cuando el paciente ya tiene una cita en el mismo horario</exception>
         public async Task<bool> AgendarCita(Cita cita)
         {
             // Validar disponibilidad del doctor en la fecha y hora solicitadas
@@ -84,9 +80,7 @@ namespace CapaNegocio.Clases
         }
 
 
-        /// Cancela una cita existente.
-        /// <param name="idCita">ID de la cita a cancelar</param>
-        /// <returns>True si la cancelación fue exitosa, False en caso contrario</returns>
+       
         public async Task<bool> CancelarCita(int idCita)
         {
             // Buscar la cita en la agenda
@@ -113,9 +107,7 @@ namespace CapaNegocio.Clases
         //Implementación de IDiagnosticable
 
 
-        /// Registra un diagnóstico médico para una cita.
-        /// <param name="diagnostico">Objeto Diagnostico con la información del diagnóstico</param>
-        /// <returns>True si el registro fue exitoso, False en caso contrario</returns>
+       
         public async Task<bool> RegistrarDiagnostico(Diagnostico diagnostico)
         {
             try
@@ -147,9 +139,7 @@ namespace CapaNegocio.Clases
         }
 
       
-        /// Obtiene el historial de diagnósticos de un paciente.
-        /// <param name="idPaciente">ID del paciente</param>
-        /// <returns>Lista de diagnósticos del paciente</returns>
+       
         public async Task<List<Diagnostico>> ObtenerHistorial(int idPaciente)
         {
             // En una implementación real, esto consultaría a la base de datos
@@ -160,12 +150,7 @@ namespace CapaNegocio.Clases
 
         // Métodos auxiliares
 
-        /// Verifica la disponibilidad de un doctor en una fecha y hora específicas.
-        /// </summary>
-        /// <param name="idDoctor">ID del doctor</param>
-        /// <param name="fecha">Fecha de la cita</param>
-        /// <param name="hora">Hora de la cita</param>
-        /// <returns>True si el doctor está disponible, False en caso contrario</returns>
+       
         private async Task<bool> VerificarDisponibilidad(int idDoctor, DateTime fecha, TimeSpan hora)
         {
             // En una implementación real, esto verificaría en la base de datos
@@ -189,8 +174,7 @@ namespace CapaNegocio.Clases
 
          //Métodos para cargar datos
 
-        /// Obtiene la lista de doctores registrados en el sistema.
-        /// <returns>Lista de objetos Doctor</returns>
+      
         public async Task<List<Doctor>> ObtenerDoctores()
         {
             // En una implementación real, esto consultaría a la base de datos
@@ -198,9 +182,7 @@ namespace CapaNegocio.Clases
             return _doctores;
         }
 
-        /// Obtiene las citas programadas para una fecha específica.
-        /// <param name="fecha">Fecha para la cual se desean consultar las citas</param>
-        /// <returns>Lista de citas para la fecha especificada</returns>
+        
         public async Task<List<Cita>> ObtenerCitasPorFecha(DateTime fecha)
         {
             // En una implementación real, esto consultaría a la base de datos
