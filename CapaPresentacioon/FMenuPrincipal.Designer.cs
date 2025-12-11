@@ -37,7 +37,7 @@
             btnCancelarGes = new MaterialSkin.Controls.MaterialButton();
             btnAgendarGes = new MaterialSkin.Controls.MaterialButton();
             btnEditarGes = new MaterialSkin.Controls.MaterialButton();
-            dataGridView2 = new DataGridView();
+            dgvGestion = new DataGridView();
             materialCard3 = new MaterialSkin.Controls.MaterialCard();
             dtpHoraGes = new DateTimePicker();
             materialLabel9 = new MaterialSkin.Controls.MaterialLabel();
@@ -57,16 +57,16 @@
             btnFiltrarDig = new MaterialSkin.Controls.MaterialButton();
             mtbTelefonoDig = new MaterialSkin.Controls.MaterialMaskedTextBox();
             lblTelefonoGes = new MaterialSkin.Controls.MaterialLabel();
-            dateTimePicker1 = new DateTimePicker();
+            dtpFechaDig = new DateTimePicker();
             mtbDescripcionDig = new MaterialSkin.Controls.MaterialMultiLineTextBox2();
             tbNombreDig = new MaterialSkin.Controls.MaterialTextBox2();
-            materialButton2 = new MaterialSkin.Controls.MaterialButton();
-            materialButton1 = new MaterialSkin.Controls.MaterialButton();
+            btnGuardarDig = new MaterialSkin.Controls.MaterialButton();
+            btnRegistrarDig = new MaterialSkin.Controls.MaterialButton();
             lblRegistrsrDig = new MaterialSkin.Controls.MaterialLabel();
             lblDescripcionDig = new MaterialSkin.Controls.MaterialLabel();
             materialLabel2 = new MaterialSkin.Controls.MaterialLabel();
             materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
-            dataGridView1 = new DataGridView();
+            dgvDiagnosticos = new DataGridView();
             tabPage4 = new TabPage();
             materialCard10 = new MaterialSkin.Controls.MaterialCard();
             cbDoctorDis = new MaterialSkin.Controls.MaterialComboBox();
@@ -98,12 +98,12 @@
             tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvGestion).BeginInit();
             materialCard3.SuspendLayout();
             tabPage2.SuspendLayout();
             materialCard2.SuspendLayout();
             materialCard1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvDiagnosticos).BeginInit();
             tabPage4.SuspendLayout();
             materialCard10.SuspendLayout();
             materialCard9.SuspendLayout();
@@ -161,7 +161,7 @@
             tabPage1.Controls.Add(btnCancelarGes);
             tabPage1.Controls.Add(btnAgendarGes);
             tabPage1.Controls.Add(btnEditarGes);
-            tabPage1.Controls.Add(dataGridView2);
+            tabPage1.Controls.Add(dgvGestion);
             tabPage1.Controls.Add(materialCard3);
             tabPage1.Location = new Point(4, 34);
             tabPage1.Name = "tabPage1";
@@ -189,6 +189,7 @@
             btnGuardarGes.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnGuardarGes.UseAccentColor = false;
             btnGuardarGes.UseVisualStyleBackColor = true;
+            btnGuardarGes.Click += btnGuardarGes_Click;
             // 
             // btnCancelarGes
             // 
@@ -228,6 +229,7 @@
             btnAgendarGes.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnAgendarGes.UseAccentColor = false;
             btnAgendarGes.UseVisualStyleBackColor = true;
+            btnAgendarGes.Click += btnAgendarGes_Click;
             // 
             // btnEditarGes
             // 
@@ -250,14 +252,15 @@
             btnEditarGes.UseVisualStyleBackColor = true;
             btnEditarGes.Click += btnEditarGes_Click;
             // 
-            // dataGridView2
+            // dgvGestion
             // 
-            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.Location = new Point(145, 187);
-            dataGridView2.Name = "dataGridView2";
-            dataGridView2.RowHeadersWidth = 62;
-            dataGridView2.Size = new Size(1012, 325);
-            dataGridView2.TabIndex = 1;
+            dgvGestion.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvGestion.Location = new Point(145, 187);
+            dgvGestion.Name = "dgvGestion";
+            dgvGestion.RowHeadersWidth = 62;
+            dgvGestion.Size = new Size(1012, 325);
+            dgvGestion.TabIndex = 1;
+            dgvGestion.CellContentClick += DGVGestion_CellContentClick;
             // 
             // materialCard3
             // 
@@ -439,7 +442,7 @@
             // 
             tabPage2.Controls.Add(materialCard2);
             tabPage2.Controls.Add(materialCard1);
-            tabPage2.Controls.Add(dataGridView1);
+            tabPage2.Controls.Add(dgvDiagnosticos);
             tabPage2.Location = new Point(4, 34);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
@@ -484,11 +487,11 @@
             materialCard1.Controls.Add(btnFiltrarDig);
             materialCard1.Controls.Add(mtbTelefonoDig);
             materialCard1.Controls.Add(lblTelefonoGes);
-            materialCard1.Controls.Add(dateTimePicker1);
+            materialCard1.Controls.Add(dtpFechaDig);
             materialCard1.Controls.Add(mtbDescripcionDig);
             materialCard1.Controls.Add(tbNombreDig);
-            materialCard1.Controls.Add(materialButton2);
-            materialCard1.Controls.Add(materialButton1);
+            materialCard1.Controls.Add(btnGuardarDig);
+            materialCard1.Controls.Add(btnRegistrarDig);
             materialCard1.Controls.Add(lblRegistrsrDig);
             materialCard1.Controls.Add(lblDescripcionDig);
             materialCard1.Controls.Add(materialLabel2);
@@ -510,7 +513,7 @@
             btnBuscarDig.Depth = 0;
             btnBuscarDig.HighEmphasis = true;
             btnBuscarDig.Icon = null;
-            btnBuscarDig.Location = new Point(320, 494);
+            btnBuscarDig.Location = new Point(308, 494);
             btnBuscarDig.Margin = new Padding(4, 6, 4, 6);
             btnBuscarDig.MouseState = MaterialSkin.MouseState.HOVER;
             btnBuscarDig.Name = "btnBuscarDig";
@@ -521,6 +524,7 @@
             btnBuscarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnBuscarDig.UseAccentColor = false;
             btnBuscarDig.UseVisualStyleBackColor = true;
+            btnBuscarDig.Click += btnBuscarDig_Click;
             // 
             // btnFiltrarDig
             // 
@@ -529,7 +533,7 @@
             btnFiltrarDig.Depth = 0;
             btnFiltrarDig.HighEmphasis = true;
             btnFiltrarDig.Icon = null;
-            btnFiltrarDig.Location = new Point(128, 494);
+            btnFiltrarDig.Location = new Point(221, 494);
             btnFiltrarDig.Margin = new Padding(4, 6, 4, 6);
             btnFiltrarDig.MouseState = MaterialSkin.MouseState.HOVER;
             btnFiltrarDig.Name = "btnFiltrarDig";
@@ -540,6 +544,7 @@
             btnFiltrarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnFiltrarDig.UseAccentColor = false;
             btnFiltrarDig.UseVisualStyleBackColor = true;
+            btnFiltrarDig.Click += btnFiltrarDig_Click;
             // 
             // mtbTelefonoDig
             // 
@@ -596,12 +601,12 @@
             lblTelefonoGes.Text = "Telefono";
             lblTelefonoGes.Click += lblTelefonoGes_Click;
             // 
-            // dateTimePicker1
+            // dtpFechaDig
             // 
-            dateTimePicker1.Location = new Point(39, 90);
-            dateTimePicker1.Name = "dateTimePicker1";
-            dateTimePicker1.Size = new Size(338, 31);
-            dateTimePicker1.TabIndex = 9;
+            dtpFechaDig.Location = new Point(39, 90);
+            dtpFechaDig.Name = "dtpFechaDig";
+            dtpFechaDig.Size = new Size(338, 31);
+            dtpFechaDig.TabIndex = 9;
             // 
             // mtbDescripcionDig
             // 
@@ -656,46 +661,47 @@
             tbNombreDig.UseSystemPasswordChar = false;
             tbNombreDig.Click += materialTextBox21_Click;
             // 
-            // materialButton2
+            // btnGuardarDig
             // 
-            materialButton2.AccessibleName = "btnGuardarDig";
-            materialButton2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            materialButton2.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            materialButton2.Depth = 0;
-            materialButton2.HighEmphasis = true;
-            materialButton2.Icon = null;
-            materialButton2.Location = new Point(222, 494);
-            materialButton2.Margin = new Padding(10, 6, 4, 6);
-            materialButton2.MouseState = MaterialSkin.MouseState.HOVER;
-            materialButton2.Name = "materialButton2";
-            materialButton2.NoAccentTextColor = Color.Empty;
-            materialButton2.Size = new Size(88, 36);
-            materialButton2.TabIndex = 6;
-            materialButton2.Text = "Guardar";
-            materialButton2.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            materialButton2.UseAccentColor = false;
-            materialButton2.UseVisualStyleBackColor = true;
-            materialButton2.Click += materialButton2_Click;
+            btnGuardarDig.AccessibleName = "btnGuardarDig";
+            btnGuardarDig.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnGuardarDig.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            btnGuardarDig.Depth = 0;
+            btnGuardarDig.HighEmphasis = true;
+            btnGuardarDig.Icon = null;
+            btnGuardarDig.Location = new Point(125, 494);
+            btnGuardarDig.Margin = new Padding(10, 6, 4, 6);
+            btnGuardarDig.MouseState = MaterialSkin.MouseState.HOVER;
+            btnGuardarDig.Name = "btnGuardarDig";
+            btnGuardarDig.NoAccentTextColor = Color.Empty;
+            btnGuardarDig.Size = new Size(88, 36);
+            btnGuardarDig.TabIndex = 6;
+            btnGuardarDig.Text = "Guardar";
+            btnGuardarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            btnGuardarDig.UseAccentColor = false;
+            btnGuardarDig.UseVisualStyleBackColor = true;
+            btnGuardarDig.Click += materialButton2_Click;
             // 
-            // materialButton1
+            // btnRegistrarDig
             // 
-            materialButton1.AccessibleName = "btnRegistrarDig";
-            materialButton1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            materialButton1.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            materialButton1.Depth = 0;
-            materialButton1.HighEmphasis = true;
-            materialButton1.Icon = null;
-            materialButton1.Location = new Point(16, 494);
-            materialButton1.Margin = new Padding(10, 6, 4, 6);
-            materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
-            materialButton1.Name = "materialButton1";
-            materialButton1.NoAccentTextColor = Color.Empty;
-            materialButton1.Size = new Size(99, 36);
-            materialButton1.TabIndex = 5;
-            materialButton1.Text = "Registrar";
-            materialButton1.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            materialButton1.UseAccentColor = false;
-            materialButton1.UseVisualStyleBackColor = true;
+            btnRegistrarDig.AccessibleName = "btnRegistrarDig";
+            btnRegistrarDig.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnRegistrarDig.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            btnRegistrarDig.Depth = 0;
+            btnRegistrarDig.HighEmphasis = true;
+            btnRegistrarDig.Icon = null;
+            btnRegistrarDig.Location = new Point(18, 494);
+            btnRegistrarDig.Margin = new Padding(10, 6, 4, 6);
+            btnRegistrarDig.MouseState = MaterialSkin.MouseState.HOVER;
+            btnRegistrarDig.Name = "btnRegistrarDig";
+            btnRegistrarDig.NoAccentTextColor = Color.Empty;
+            btnRegistrarDig.Size = new Size(99, 36);
+            btnRegistrarDig.TabIndex = 5;
+            btnRegistrarDig.Text = "Registrar";
+            btnRegistrarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            btnRegistrarDig.UseAccentColor = false;
+            btnRegistrarDig.UseVisualStyleBackColor = true;
+            btnRegistrarDig.Click += materialButton1_Click;
             // 
             // lblRegistrsrDig
             // 
@@ -748,15 +754,15 @@
             materialLabel1.TabIndex = 1;
             materialLabel1.Text = "Fecha ";
             // 
-            // dataGridView1
+            // dgvDiagnosticos
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(485, 14);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowHeadersWidth = 62;
-            dataGridView1.Size = new Size(734, 454);
-            dataGridView1.TabIndex = 0;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+            dgvDiagnosticos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvDiagnosticos.Location = new Point(485, 14);
+            dgvDiagnosticos.Name = "dgvDiagnosticos";
+            dgvDiagnosticos.RowHeadersWidth = 62;
+            dgvDiagnosticos.Size = new Size(734, 454);
+            dgvDiagnosticos.TabIndex = 0;
+            dgvDiagnosticos.CellContentClick += dataGridView1_CellContentClick;
             // 
             // tabPage4
             // 
@@ -1151,7 +1157,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvGestion).EndInit();
             materialCard3.ResumeLayout(false);
             materialCard3.PerformLayout();
             tabPage2.ResumeLayout(false);
@@ -1159,7 +1165,7 @@
             materialCard2.PerformLayout();
             materialCard1.ResumeLayout(false);
             materialCard1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvDiagnosticos).EndInit();
             tabPage4.ResumeLayout(false);
             tabPage4.PerformLayout();
             materialCard10.ResumeLayout(false);
@@ -1191,7 +1197,7 @@
         private TabPage tabPage5;
         private TabPage tabPage3;
         private PictureBox pictureBox1;
-        private DataGridView dataGridView1;
+        private DataGridView dgvDiagnosticos;
         private MaterialSkin.Controls.MaterialCard materialCard2;
         private MaterialSkin.Controls.MaterialLabel LblDiag;
         private MaterialSkin.Controls.MaterialCard materialCard1;
@@ -1199,12 +1205,12 @@
         private MaterialSkin.Controls.MaterialLabel materialLabel1;
         private MaterialSkin.Controls.MaterialLabel lblDescripcionDig;
         private MaterialSkin.Controls.MaterialLabel lblRegistrsrDig;
-        private MaterialSkin.Controls.MaterialButton materialButton2;
-        private MaterialSkin.Controls.MaterialButton materialButton1;
+        private MaterialSkin.Controls.MaterialButton btnGuardarDig;
+        private MaterialSkin.Controls.MaterialButton btnRegistrarDig;
         private MaterialSkin.Controls.MaterialTextBox2 tbNombreDig;
         private MaterialSkin.Controls.MaterialMultiLineTextBox2 mtbDescripcionDig;
-        private DateTimePicker dateTimePicker1;
-        private DataGridView dataGridView2;
+        private DateTimePicker dtpFechaDig;
+        private DataGridView dgvGestion;
         private MaterialSkin.Controls.MaterialCard materialCard3;
         private MaterialSkin.Controls.MaterialButton btnCancelarGes;
         private MaterialSkin.Controls.MaterialButton btnAgendarGes;

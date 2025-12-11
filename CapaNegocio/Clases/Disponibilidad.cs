@@ -23,9 +23,9 @@ namespace CapaNegocio.Clases
             {
                 using (SqlConnection con = new SqlConnection(ConexionBD.Cn))   // ← AQUÍ EL "new"
                 {
-                    string query = @"INSERT INTO Disponibilidades 
-                                    (IdDoctor, FechaEntrada, FechaSalida, HoraEntrada, HoraSalida, EstaDisponible) 
-                                     VALUES (@IdDoctor, @FechaEntrada, @FechaSalida, @HoraEntrada, @HoraSalida, @EstaDisponible)";
+                    string query = @"INSERT INTO Disponibilidad 
+                                    (IdDoctor, FechaEntrada, FechaSalida, HoraEntrada, HoraSalida) 
+                                     VALUES (@IdDoctor, @FechaEntrada, @FechaSalida, @HoraEntrada, @HoraSalida)";
 
                     SqlCommand cmd = new SqlCommand(query, con);
 
@@ -34,7 +34,7 @@ namespace CapaNegocio.Clases
                     cmd.Parameters.AddWithValue("@FechaSalida", fechaSalida);
                     cmd.Parameters.AddWithValue("@HoraEntrada", horaEntrada);
                     cmd.Parameters.AddWithValue("@HoraSalida", horaSalida);
-                    cmd.Parameters.AddWithValue("@EstaDisponible", true);
+                    //cmd.Parameters.AddWithValue("@EstaDisponible", true);
 
                     con.Open();
                     cmd.ExecuteNonQuery();

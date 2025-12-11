@@ -15,5 +15,11 @@ namespace CapaNegocio.Clases
         public TimeSpan Hora { get; set; }
         public string Estado { get; set; } // Agendada, Cancelada, Atendida
         public string Motivo { get; set; }
+
+
+
+
     }
+
+
 }
