@@ -93,7 +93,7 @@
             tbNombreCitAg = new MaterialSkin.Controls.MaterialTextBox2();
             lblNombreCitAg = new MaterialSkin.Controls.MaterialLabel();
             lblBusacarCitAg = new MaterialSkin.Controls.MaterialLabel();
-            dataGridView3 = new DataGridView();
+            dgvCitasAg = new DataGridView();
             materialTabControl1.SuspendLayout();
             tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -114,7 +114,7 @@
             materialCard7.SuspendLayout();
             tabPage5.SuspendLayout();
             materialCard4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvCitasAg).BeginInit();
             SuspendLayout();
             // 
             // materialTabControl1
@@ -143,7 +143,7 @@
             tabPage3.TabIndex = 5;
             tabPage3.Text = "Home";
             tabPage3.UseVisualStyleBackColor = true;
-            tabPage3.Click += tabPage3_Click;
+          //  tabPage3.Click += tabPage3_Click;
             // 
             // pictureBox1
             // 
@@ -260,7 +260,7 @@
             dgvGestion.RowHeadersWidth = 62;
             dgvGestion.Size = new Size(1012, 325);
             dgvGestion.TabIndex = 1;
-            dgvGestion.CellContentClick += DGVGestion_CellContentClick;
+          //  dgvGestion.CellContentClick += DGVGestion_CellContentClick;
             // 
             // materialCard3
             // 
@@ -464,7 +464,7 @@
             materialCard2.Padding = new Padding(14);
             materialCard2.Size = new Size(599, 65);
             materialCard2.TabIndex = 2;
-            materialCard2.Paint += materialCard2_Paint;
+           // materialCard2.Paint += materialCard2_Paint;
             // 
             // LblDiag
             // 
@@ -478,7 +478,7 @@
             LblDiag.Size = new Size(98, 19);
             LblDiag.TabIndex = 0;
             LblDiag.Text = "Diagnosticos ";
-            LblDiag.Click += LblDiag_Click;
+           // LblDiag.Click += LblDiag_Click;
             // 
             // materialCard1
             // 
@@ -586,7 +586,7 @@
             mtbTelefonoDig.TrailingIcon = null;
             mtbTelefonoDig.UseSystemPasswordChar = false;
             mtbTelefonoDig.ValidatingType = null;
-            mtbTelefonoDig.Click += mtbTelefonoDig_Click;
+           // mtbTelefonoDig.Click += mtbTelefonoDig_Click;
             // 
             // lblTelefonoGes
             // 
@@ -599,7 +599,7 @@
             lblTelefonoGes.Size = new Size(64, 19);
             lblTelefonoGes.TabIndex = 10;
             lblTelefonoGes.Text = "Telefono";
-            lblTelefonoGes.Click += lblTelefonoGes_Click;
+            //lblTelefonoGes.Click += lblTelefonoGes_Click;
             // 
             // dtpFechaDig
             // 
@@ -659,7 +659,7 @@
             tbNombreDig.TextAlign = HorizontalAlignment.Left;
             tbNombreDig.TrailingIcon = null;
             tbNombreDig.UseSystemPasswordChar = false;
-            tbNombreDig.Click += materialTextBox21_Click;
+            //tbNombreDig.Click += materialTextBox21_Click;
             // 
             // btnGuardarDig
             // 
@@ -739,7 +739,7 @@
             materialLabel2.Size = new Size(151, 19);
             materialLabel2.TabIndex = 2;
             materialLabel2.Text = "Nombre del Paciente ";
-            materialLabel2.Click += materialLabel2_Click;
+           // materialLabel2.Click += materialLabel2_Click;
             // 
             // materialLabel1
             // 
@@ -762,7 +762,7 @@
             dgvDiagnosticos.RowHeadersWidth = 62;
             dgvDiagnosticos.Size = new Size(734, 454);
             dgvDiagnosticos.TabIndex = 0;
-            dgvDiagnosticos.CellContentClick += dataGridView1_CellContentClick;
+            //dgvDiagnosticos.CellContentClick += dataGridView1_CellContentClick;
             // 
             // tabPage4
             // 
@@ -792,7 +792,7 @@
             materialCard10.Padding = new Padding(14);
             materialCard10.Size = new Size(337, 120);
             materialCard10.TabIndex = 9;
-            materialCard10.Paint += materialCard10_Paint;
+           // materialCard10.Paint += materialCard10_Paint;
             // 
             // cbDoctorDis
             // 
@@ -881,7 +881,7 @@
             materialLabel10.Size = new Size(171, 19);
             materialLabel10.TabIndex = 2;
             materialLabel10.Text = "Seleccione dia de salida";
-            materialLabel10.Click += materialLabel10_Click;
+          //  materialLabel10.Click += materialLabel10_Click;
             // 
             // materialCard8
             // 
@@ -1004,7 +1004,7 @@
             btnGuardarDis.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnGuardarDis.UseAccentColor = false;
             btnGuardarDis.UseVisualStyleBackColor = true;
-            btnGuardarDis.Click += btnGuardarDis_Click;
+          //  btnGuardarDis.Click += btnGuardarDis_Click;
             // 
             // materialCard7
             // 
@@ -1019,7 +1019,7 @@
             materialCard7.Padding = new Padding(14);
             materialCard7.Size = new Size(269, 39);
             materialCard7.TabIndex = 3;
-            materialCard7.Paint += materialCard7_Paint;
+            //materialCard7.Paint += materialCard7_Paint;
             // 
             // materialLabel4
             // 
@@ -1036,7 +1036,7 @@
             // tabPage5
             // 
             tabPage5.Controls.Add(materialCard4);
-            tabPage5.Controls.Add(dataGridView3);
+            tabPage5.Controls.Add(dgvCitasAg);
             tabPage5.Location = new Point(4, 34);
             tabPage5.Name = "tabPage5";
             tabPage5.Padding = new Padding(3);
@@ -1080,6 +1080,7 @@
             btnBuscarCitAg.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnBuscarCitAg.UseAccentColor = false;
             btnBuscarCitAg.UseVisualStyleBackColor = true;
+            btnBuscarCitAg.Click += btnBuscarCitAg_Click;
             // 
             // tbNombreCitAg
             // 
@@ -1132,16 +1133,16 @@
             lblBusacarCitAg.Size = new Size(166, 19);
             lblBusacarCitAg.TabIndex = 0;
             lblBusacarCitAg.Text = "Buscar cita de Paciente";
-            lblBusacarCitAg.Click += lblBusacarCitAg_Click;
+            //lblBusacarCitAg.Click += lblBusacarCitAg_Click;
             // 
-            // dataGridView3
+            // dgvCitasAg
             // 
-            dataGridView3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView3.Location = new Point(449, 75);
-            dataGridView3.Name = "dataGridView3";
-            dataGridView3.RowHeadersWidth = 62;
-            dataGridView3.Size = new Size(764, 381);
-            dataGridView3.TabIndex = 0;
+            dgvCitasAg.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvCitasAg.Location = new Point(449, 75);
+            dgvCitasAg.Name = "dgvCitasAg";
+            dgvCitasAg.RowHeadersWidth = 62;
+            dgvCitasAg.Size = new Size(764, 381);
+            dgvCitasAg.TabIndex = 0;
             // 
             // FMenuPrincipal
             // 
@@ -1184,7 +1185,7 @@
             tabPage5.ResumeLayout(false);
             materialCard4.ResumeLayout(false);
             materialCard4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvCitasAg).EndInit();
             ResumeLayout(false);
         }
 
@@ -1223,7 +1224,7 @@
         private MaterialSkin.Controls.MaterialComboBox cbDoctorGes;
         private MaterialSkin.Controls.MaterialCard materialCard4;
         private MaterialSkin.Controls.MaterialLabel lblBusacarCitAg;
-        private DataGridView dataGridView3;
+        private DataGridView dgvCitasAg;
         private MaterialSkin.Controls.MaterialButton btnBuscarCitAg;
         private MaterialSkin.Controls.MaterialTextBox2 tbNombreCitAg;
         private MaterialSkin.Controls.MaterialLabel lblNombreCitAg;

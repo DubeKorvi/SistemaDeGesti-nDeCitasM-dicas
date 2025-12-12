@@ -174,5 +174,48 @@ namespace CapaNegocio.Clases
             return null;
         }
 
+
+        public static DataTable MostrarCitasAgendadas()
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection con = new SqlConnection(ConexionBD.Cn))
+            {
+                string query = @"SELECT C.IdCita, P.Nombre AS Paciente, D.Nombre AS Doctor, 
+                                C.Fecha, C.Hora, C.Estado, C.Motivo
+                         FROM Cita C
+                         INNER JOIN Paciente P ON C.IdPaciente = P.IdPaciente
+                         INNER JOIN Doctor D ON C.IdDoctor = D.IdDoctor
+                         WHERE C.Estado = 'Agendada'
+                         ORDER BY C.Fecha, C.Hora";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+
+        public static DataTable BuscarCitasAgendadas(string nombre)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection con = new SqlConnection(ConexionBD.Cn))
+            {
+                string query = @"SELECT C.IdCita, P.Nombre AS Paciente, D.Nombre AS Doctor, 
+                                C.Fecha, C.Hora, C.Estado, C.Motivo
+                         FROM Cita C
+                         INNER JOIN Paciente P ON C.IdPaciente = P.IdPaciente
+                         INNER JOIN Doctor D ON C.IdDoctor = D.IdDoctor
+                         WHERE C.Estado = 'Agendada'
+                         AND P.Nombre LIKE @n
+                         ORDER BY C.Fecha, C.Hora";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@n", "%" + nombre + "%");
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
     }
 }
