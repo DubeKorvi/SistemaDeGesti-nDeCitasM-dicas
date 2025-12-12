@@ -16,8 +16,8 @@ namespace CapaPresentacioon
         private System.Windows.Forms.Timer progressTimer;
         private int progressValue = 0;
         private const int PROGRESS_MAX = 100;
-        private const int PROGRESS_STEP = 1;
-        private const int TIMER_INTERVAL = 20; // ms
+        private const int PROGRESS_STEP = 2;
+        private const int TIMER_INTERVAL = 30; // ms
 
         public loguin()
         {
@@ -46,7 +46,7 @@ namespace CapaPresentacioon
             progressBarLogin.Maximum = PROGRESS_MAX;
 
             //Personalizar colores de la barra de progreso
-            progressBarLogin.ForeColor = Color.LightGray;
+            progressBarLogin.ForeColor = Color.FromArgb(230, 230, 230);
             progressBarLogin.BackColor = Color.DodgerBlue;
 
             // Configurar el temporizador para la animación
@@ -89,10 +89,6 @@ namespace CapaPresentacioon
         }
 
 
-      /*  private void materialProgressBar1_Click(object sender, EventArgs e)
-        {
-        }*/
-
         // Habilitar o deshabilitar controles de loguin
         private void SetLoguinControlsEnabled(bool enabled)
         {
@@ -101,6 +97,7 @@ namespace CapaPresentacioon
             materialButton1.Enabled = enabled;
             this.UseWaitCursor = !enabled;
         }
+
 
         // Ahora es asincrono 
         private async void materialButton1_Click(object sender, EventArgs e)
@@ -123,32 +120,40 @@ namespace CapaPresentacioon
                 //crear una instancia de la clase Credencial
                 var credencial = new CapaNegocio.Clases.Credencial();
 
-                //crear un token de cancelacion
-                // _cancellationTokenSource = new CancellationTokenSource();
-
                 //Ejecutar la autenticacion en segundo plano
                 DataTable resultado = await Task.Run(() =>
                 credencial.Login(usuario, clave));
 
-                // Si la autenticación es muy rápida, esperar un mínimo para mostrar la animación
-                await Task.Delay(800);
 
                 //Verificar el resultado
                 if (resultado == null || resultado.Rows.Count == 0)
                 {
+                    progressTimer.Stop();
+                    progressBarLogin.Visible = false;
                     MessageBox.Show("Usuario o Contraseña incorrectos", "Error de autentificación",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // si llegamos aqui el login fue exitoso
-
                 string rol = resultado.Rows[0]["Rol"].ToString();
                 int idDoctor = resultado.Rows[0]["IdDoctor"] != DBNull.Value ?
-                    Convert.ToInt32(resultado.Rows[0]["IdDoctor"]) : 0;
+                    Convert.ToInt32(resultado.Rows[0]["IdDoctor"]) : 0; 
+
+                // si llegamos aqui el login fue exitoso
+                //Mostrar la barra de progreso completa
+                progressBarLogin.Visible = true;
+                progressTimer.Start();
+
+                // esperar a que la barra se llene 
+                while (progressBarLogin.Value < PROGRESS_MAX)
+                {
+                    await Task.Delay(30);
+                }
+
+                await Task.Delay(100); // Pequeña pausa para ver la barra completa
 
                 // Completar la barra de progreso
-                progressBarLogin.Value = PROGRESS_MAX;
+                progressBarLogin.Value = PROGRESS_MAX; // Completar la barra
                 await Task.Delay(200); // Pequeña pausa para ver la barra completa
 
                 // Ocultar este formulario y mostrar el menu principal
@@ -174,8 +179,9 @@ namespace CapaPresentacioon
             {
                 //Restaurar controles de loguin
                 //Detener y ocultar la barra de progreso    
-                progressTimer.Stop();
                 SetLoguinControlsEnabled(true);
+                this.UseWaitCursor = false;
+                progressTimer.Stop();
                 progressBarLogin.Visible = false;
             }
 
@@ -186,6 +192,4 @@ namespace CapaPresentacioon
 
         }
     }
-
-
 }
