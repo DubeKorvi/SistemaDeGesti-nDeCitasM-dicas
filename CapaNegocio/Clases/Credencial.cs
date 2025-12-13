@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
-//using CapaDatos;
 using Microsoft.Data.SqlClient;
 using SistemaDeGestionDeCitasMedicas;
 
@@ -25,25 +19,25 @@ namespace CapaNegocio.Clases
             {
                 using (SqlConnection con = new SqlConnection(ConexionBD.Cn))
                 {
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM Credencial WHERE Usuario=@u AND Clave=@c", con);
+                    // ⭐ IMPORTANTE: Seleccionar también IdDoctor
+                    SqlCommand cmd = new SqlCommand(
+                        "SELECT IdCredencial, Usuario, Rol, IdDoctor FROM Credencial WHERE Usuario=@u AND Clave=@c",
+                        con);
                     cmd.Parameters.AddWithValue("@u", usuario);
                     cmd.Parameters.AddWithValue("@c", clave);
 
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
-
                     da.Fill(dt);
                     return dt;
                 }
             }
         }
+
         public DataTable Login(string usuario, string clave)
         {
             DCredencial d = new DCredencial();
             return d.Login(usuario, clave);
         }
-
     }
-
-
 }

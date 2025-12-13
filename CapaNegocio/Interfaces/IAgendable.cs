@@ -9,7 +9,7 @@ namespace CapaNegocio.Interfaces
 {
     internal interface IAgendable
     {
-        Task<bool> AgendarCita(Cita cita);
+        Task<bool> AgendarCita(Cita2 cita);
         Task<bool> CancelarCita(int idCita);
     }
 }

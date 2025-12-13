@@ -1,12 +1,11 @@
+Ôªøusing System;
 using System.Data;
-using System.Drawing.Text;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using CapaNegocio.Clases;
 using MaterialSkin;
-using static CapaNegocio.Clases.Credencial;
-
-
 
 namespace CapaPresentacioon
 {
@@ -17,49 +16,42 @@ namespace CapaPresentacioon
         private int progressValue = 0;
         private const int PROGRESS_MAX = 100;
         private const int PROGRESS_STEP = 1;
-        private const int TIMER_INTERVAL = 20; // ms
+        private const int TIMER_INTERVAL = 20;
 
         public loguin()
         {
-
             InitializeComponent();
+
+            this.Text = "Clinica SanRafael - Login";
 
             // Configurar MaterialSkin
             var materialSkinManager = MaterialSkin.MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkin.MaterialSkinManager.Themes.LIGHT;
 
-
-            // --- CONFIGURACI”N CON COLORES AZULES (similar al diseÒo de la imagen) ---
             materialSkinManager.ColorScheme = new MaterialSkin.ColorScheme(
-                MaterialSkin.Primary.Blue600,       // Azul principal
-                MaterialSkin.Primary.Blue800,       // Azul "dark" del men˙ y cabecera
-                MaterialSkin.Primary.Blue400,       // Azul m·s claro
-                MaterialSkin.Accent.LightBlue200,   // Accent suave estilo Windows 11
-                MaterialSkin.TextShade.WHITE        // Texto blanco para†contrastar
+                MaterialSkin.Primary.Blue600,
+                MaterialSkin.Primary.Blue800,
+                MaterialSkin.Primary.Blue400,
+                MaterialSkin.Accent.LightBlue200,
+                MaterialSkin.TextShade.WHITE
             );
-
 
             progressBarLogin.Visible = false;
             progressBarLogin.Style = ProgressBarStyle.Continuous;
             progressBarLogin.Height = 10;
             progressBarLogin.Maximum = PROGRESS_MAX;
 
-            //Personalizar colores de la barra de progreso
             progressBarLogin.ForeColor = Color.LightGray;
             progressBarLogin.BackColor = Color.DodgerBlue;
 
-            // Configurar el temporizador para la animaciÛn
             progressTimer = new System.Windows.Forms.Timer();
             progressTimer.Interval = TIMER_INTERVAL;
             progressTimer.Tick += ProgressTimer_Tick;
 
-            // Asegurarse de que la barra use los colores del tema
             var skinManager = MaterialSkin.MaterialSkinManager.Instance;
             progressBarLogin.BackColor = skinManager.ColorScheme.LightPrimaryColor;
             progressBarLogin.ForeColor = skinManager.ColorScheme.PrimaryColor;
-
-
         }
 
         private void ProgressTimer_Tick(object sender, EventArgs e)
@@ -75,25 +67,16 @@ namespace CapaPresentacioon
             }
         }
 
-
-        // configuracion inicial de la barra de progreso
         private void loguin_FormClosing(object sender, FormClosingEventArgs e)
         {
             _cancellationTokenSource?.Cancel();
         }
 
-        // Metodo para manejar el cierre del formulario
         private void loguin_FormClosed(object sender, FormClosedEventArgs e)
         {
             _cancellationTokenSource?.Cancel();
         }
 
-
-      /*  private void materialProgressBar1_Click(object sender, EventArgs e)
-        {
-        }*/
-
-        // Habilitar o deshabilitar controles de loguin
         private void SetLoguinControlsEnabled(bool enabled)
         {
             tbUsuarioLoguin.Enabled = enabled;
@@ -102,90 +85,91 @@ namespace CapaPresentacioon
             this.UseWaitCursor = !enabled;
         }
 
-        // Ahora es asincrono 
         private async void materialButton1_Click(object sender, EventArgs e)
         {
-            string usuario = tbUsuarioLoguin.Text;
-            string clave = tbContrasenaLoguin.Text;
+            string usuario = tbUsuarioLoguin.Text.Trim();
+            string clave = tbContrasenaLoguin.Text.Trim();
+
+            // Validaciones b√°sicas
+            if (string.IsNullOrEmpty(usuario))
+            {
+                MessageBox.Show("Ingrese su usuario.", "Validaci√≥n",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                tbUsuarioLoguin.Focus();
+                return;
+            }
+
+            if (string.IsNullOrEmpty(clave))
+            {
+                MessageBox.Show("Ingrese su contrase√±a.", "Validaci√≥n",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                tbContrasenaLoguin.Focus();
+                return;
+            }
 
             try
             {
-                // Desabilitar controles durante la autenticacion 
                 SetLoguinControlsEnabled(false);
 
-                // Mostrar barra de progreso
-                // Iniciar la animaciÛn
                 progressValue = 0;
                 progressBarLogin.Value = 0;
                 progressBarLogin.Visible = true;
                 progressTimer.Start();
 
-                //crear una instancia de la clase Credencial
                 var credencial = new CapaNegocio.Clases.Credencial();
 
-                //crear un token de cancelacion
-                // _cancellationTokenSource = new CancellationTokenSource();
-
-                //Ejecutar la autenticacion en segundo plano
                 DataTable resultado = await Task.Run(() =>
-                credencial.Login(usuario, clave));
+                    credencial.Login(usuario, clave));
 
-                // Si la autenticaciÛn es muy r·pida, esperar un mÌnimo para mostrar la animaciÛn
                 await Task.Delay(800);
 
-                //Verificar el resultado
                 if (resultado == null || resultado.Rows.Count == 0)
                 {
-                    MessageBox.Show("Usuario o ContraseÒa incorrectos", "Error de autentificaciÛn",
+                    MessageBox.Show("Usuario o Contrase√±a incorrectos",
+                        "Error de autenticaci√≥n",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    // Limpiar campos
+                    tbContrasenaLoguin.Clear();
+                    tbUsuarioLoguin.Focus();
                     return;
                 }
 
-                // si llegamos aqui el login fue exitoso
-
+                // ‚≠ê Obtener datos del usuario autenticado
                 string rol = resultado.Rows[0]["Rol"].ToString();
                 int idDoctor = resultado.Rows[0]["IdDoctor"] != DBNull.Value ?
                     Convert.ToInt32(resultado.Rows[0]["IdDoctor"]) : 0;
 
-                // Completar la barra de progreso
                 progressBarLogin.Value = PROGRESS_MAX;
-                await Task.Delay(200); // PequeÒa pausa para ver la barra completa
+                await Task.Delay(200);
 
-                // Ocultar este formulario y mostrar el menu principal
+                // ‚≠ê Abrir el men√∫ principal con el rol y el ID del doctor
                 this.Hide();
                 FMenuPrincipal mp = new FMenuPrincipal(rol, idDoctor);
-                mp.FormClosed += (s, args) => this.Close(); // Cerrar la aplicacion cuando se cierre el menu 
+                mp.FormClosed += (s, args) => this.Close();
                 mp.Show();
-
             }
-
             catch (OperationCanceledException)
             {
-                // El usuario cancelo la operacion
-                MessageBox.Show("Inicio de sesion cancelado");
+                MessageBox.Show("Inicio de sesi√≥n cancelado", "Cancelado",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
             catch (Exception ex)
             {
-                MessageBox.Show($"Error durante el inicio de sesion: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error durante el inicio de sesi√≥n: {ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                //Restaurar controles de loguin
-                //Detener y ocultar la barra de progreso    
                 progressTimer.Stop();
                 SetLoguinControlsEnabled(true);
                 progressBarLogin.Visible = false;
             }
-
         }
 
         private void progressBarLogin_Click(object sender, EventArgs e)
         {
-
+            
         }
     }
-
-
 }

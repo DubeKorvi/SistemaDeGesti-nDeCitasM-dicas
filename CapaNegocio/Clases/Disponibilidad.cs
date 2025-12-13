@@ -46,5 +46,7 @@ namespace CapaNegocio.Clases
                 return ex.Message;
             }
         }
+
+
     }
 }

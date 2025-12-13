@@ -8,7 +8,6 @@ using SistemaDeGestionDeCitasMedicas;
 using System.Data.SqlClient;
 using CapaNegocio.Excepciones;
 
-
 namespace CapaNegocio.Clases
 {
     public class GestionDeCitas
@@ -21,7 +20,8 @@ namespace CapaNegocio.Clases
                 string query = @"SELECT C.IdCita, P.Nombre AS Paciente, D.Nombre AS Doctor, C.Fecha, C.Hora, C.Estado, C.Motivo
                                  FROM Cita C
                                  INNER JOIN Paciente P ON C.IdPaciente = P.IdPaciente
-                                 INNER JOIN Doctor D ON C.IdDoctor = D.IdDoctor";
+                                 INNER JOIN Doctor D ON C.IdDoctor = D.IdDoctor
+                                 ORDER BY C.Fecha DESC, C.Hora DESC";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -35,8 +35,51 @@ namespace CapaNegocio.Clases
             using (SqlConnection con = new SqlConnection(ConexionBD.Cn))
             {
                 con.Open();
+
+                // Verificar que el doctor esté disponible en esa fecha y hora
+                string queryVerificar = @"
+                    SELECT COUNT(*) 
+                    FROM Disponibilidad 
+                    WHERE IdDoctor = @d 
+                      AND @f BETWEEN FechaEntrada AND FechaSalida
+                      AND @h BETWEEN HoraEntrada AND HoraSalida";
+
+                SqlCommand cmdVerificar = new SqlCommand(queryVerificar, con);
+                cmdVerificar.Parameters.AddWithValue("@d", idDoctor);
+                cmdVerificar.Parameters.AddWithValue("@f", fecha.Date);
+                cmdVerificar.Parameters.AddWithValue("@h", hora);
+
+                int disponible = (int)cmdVerificar.ExecuteScalar();
+
+                if (disponible == 0)
+                {
+                    throw new HorarioNoDisponibleException("El doctor no está disponible en este horario.");
+                }
+
+                // Verificar que no haya otra cita en el mismo horario para el mismo doctor
+                string queryConflicto = @"
+                    SELECT COUNT(*) 
+                    FROM Cita 
+                    WHERE IdDoctor = @d 
+                      AND Fecha = @f 
+                      AND Hora = @h 
+                      AND Estado != 'Cancelada'";
+
+                SqlCommand cmdConflicto = new SqlCommand(queryConflicto, con);
+                cmdConflicto.Parameters.AddWithValue("@d", idDoctor);
+                cmdConflicto.Parameters.AddWithValue("@f", fecha.Date);
+                cmdConflicto.Parameters.AddWithValue("@h", hora);
+
+                int conflicto = (int)cmdConflicto.ExecuteScalar();
+
+                if (conflicto > 0)
+                {
+                    throw new CitaDuplicadaException("El doctor ya tiene una cita agendada en ese horario.");
+                }
+
+                // Insertar la cita
                 string query = @"INSERT INTO Cita (IdPaciente, IdDoctor, Fecha, Hora, Estado, Motivo)
-                         VALUES (@p, @d, @f, @h, 'Agendada', @m)";
+                                 VALUES (@p, @d, @f, @h, 'Agendada', @m)";
                 SqlCommand cmd = new SqlCommand(query, con);
 
                 cmd.Parameters.AddWithValue("@p", idPaciente);
@@ -54,9 +97,54 @@ namespace CapaNegocio.Clases
             using (SqlConnection con = new SqlConnection(ConexionBD.Cn))
             {
                 con.Open();
+
+                // Verificar que el doctor esté disponible en esa fecha y hora
+                string queryVerificar = @"
+                    SELECT COUNT(*) 
+                    FROM Disponibilidad 
+                    WHERE IdDoctor = @d 
+                      AND @f BETWEEN FechaEntrada AND FechaSalida
+                      AND @h BETWEEN HoraEntrada AND HoraSalida";
+
+                SqlCommand cmdVerificar = new SqlCommand(queryVerificar, con);
+                cmdVerificar.Parameters.AddWithValue("@d", idDoctor);
+                cmdVerificar.Parameters.AddWithValue("@f", fecha.Date);
+                cmdVerificar.Parameters.AddWithValue("@h", hora);
+
+                int disponible = (int)cmdVerificar.ExecuteScalar();
+
+                if (disponible == 0)
+                {
+                    throw new HorarioNoDisponibleException("El doctor no está disponible en este horario.");
+                }
+
+                // Verificar que no haya conflicto con otra cita (excluyendo la cita actual)
+                string queryConflicto = @"
+                    SELECT COUNT(*) 
+                    FROM Cita 
+                    WHERE IdDoctor = @d 
+                      AND Fecha = @f 
+                      AND Hora = @h 
+                      AND Estado != 'Cancelada'
+                      AND IdCita != @id";
+
+                SqlCommand cmdConflicto = new SqlCommand(queryConflicto, con);
+                cmdConflicto.Parameters.AddWithValue("@d", idDoctor);
+                cmdConflicto.Parameters.AddWithValue("@f", fecha.Date);
+                cmdConflicto.Parameters.AddWithValue("@h", hora);
+                cmdConflicto.Parameters.AddWithValue("@id", idCita);
+
+                int conflicto = (int)cmdConflicto.ExecuteScalar();
+
+                if (conflicto > 0)
+                {
+                    throw new CitaDuplicadaException("El doctor ya tiene una cita agendada en ese horario.");
+                }
+
+                // Actualizar la cita
                 string query = @"UPDATE Cita 
-                         SET IdPaciente=@p, IdDoctor=@d, Fecha=@f, Hora=@h, Motivo=@m
-                         WHERE IdCita=@id";
+                                 SET IdPaciente=@p, IdDoctor=@d, Fecha=@f, Hora=@h, Motivo=@m
+                                 WHERE IdCita=@id";
                 SqlCommand cmd = new SqlCommand(query, con);
 
                 cmd.Parameters.AddWithValue("@id", idCita);
@@ -70,7 +158,6 @@ namespace CapaNegocio.Clases
             }
         }
 
-
         public static void CancelarCita(int idCita)
         {
             using (SqlConnection con = new SqlConnection(ConexionBD.Cn))
@@ -83,7 +170,6 @@ namespace CapaNegocio.Clases
                 cmd.ExecuteNonQuery();
             }
         }
-
 
         public static int ObtenerIdPacientePorNombre(string nombre)
         {
@@ -126,18 +212,18 @@ namespace CapaNegocio.Clases
             }
         }
 
-        public static Cita ObtenerCita(int idCita)
+        public static Cita2 ObtenerCita(int idCita)
         {
             using (SqlConnection con = new SqlConnection(ConexionBD.Cn))
             {
                 string query = @"
-            SELECT C.IdCita, C.IdPaciente, P.Nombre AS NombrePaciente,
-                   C.IdDoctor, D.Nombre AS NombreDoctor,
-                   C.Fecha, C.Hora, C.Estado, C.Motivo
-            FROM Cita C
-            LEFT JOIN Paciente P ON C.IdPaciente = P.IdPaciente
-            LEFT JOIN Doctor D ON C.IdDoctor = D.IdDoctor
-            WHERE C.IdCita = @id";
+                    SELECT C.IdCita, C.IdPaciente, P.Nombre AS NombrePaciente,
+                           C.IdDoctor, D.Nombre AS NombreDoctor,
+                           C.Fecha, C.Hora, C.Estado, C.Motivo
+                    FROM Cita C
+                    LEFT JOIN Paciente P ON C.IdPaciente = P.IdPaciente
+                    LEFT JOIN Doctor D ON C.IdDoctor = D.IdDoctor
+                    WHERE C.IdCita = @id";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@id", idCita);
@@ -147,7 +233,7 @@ namespace CapaNegocio.Clases
                 {
                     if (dr.Read())
                     {
-                        var cita = new Cita
+                        var cita = new Cita2
                         {
                             IdCita = Convert.ToInt32(dr["IdCita"]),
                             Fecha = Convert.ToDateTime(dr["Fecha"]),
@@ -174,7 +260,6 @@ namespace CapaNegocio.Clases
             return null;
         }
 
-
         public static DataTable MostrarCitasAgendadas()
         {
             DataTable dt = new DataTable();
@@ -182,11 +267,11 @@ namespace CapaNegocio.Clases
             {
                 string query = @"SELECT C.IdCita, P.Nombre AS Paciente, D.Nombre AS Doctor, 
                                 C.Fecha, C.Hora, C.Estado, C.Motivo
-                         FROM Cita C
-                         INNER JOIN Paciente P ON C.IdPaciente = P.IdPaciente
-                         INNER JOIN Doctor D ON C.IdDoctor = D.IdDoctor
-                         WHERE C.Estado = 'Agendada'
-                         ORDER BY C.Fecha, C.Hora";
+                                 FROM Cita C
+                                 INNER JOIN Paciente P ON C.IdPaciente = P.IdPaciente
+                                 INNER JOIN Doctor D ON C.IdDoctor = D.IdDoctor
+                                 WHERE C.Estado = 'Agendada'
+                                 ORDER BY C.Fecha, C.Hora";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -202,12 +287,12 @@ namespace CapaNegocio.Clases
             {
                 string query = @"SELECT C.IdCita, P.Nombre AS Paciente, D.Nombre AS Doctor, 
                                 C.Fecha, C.Hora, C.Estado, C.Motivo
-                         FROM Cita C
-                         INNER JOIN Paciente P ON C.IdPaciente = P.IdPaciente
-                         INNER JOIN Doctor D ON C.IdDoctor = D.IdDoctor
-                         WHERE C.Estado = 'Agendada'
-                         AND P.Nombre LIKE @n
-                         ORDER BY C.Fecha, C.Hora";
+                                 FROM Cita C
+                                 INNER JOIN Paciente P ON C.IdPaciente = P.IdPaciente
+                                 INNER JOIN Doctor D ON C.IdDoctor = D.IdDoctor
+                                 WHERE C.Estado = 'Agendada'
+                                 AND P.Nombre LIKE @n
+                                 ORDER BY C.Fecha, C.Hora";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@n", "%" + nombre + "%");

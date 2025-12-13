@@ -33,6 +33,7 @@
             tabPage3 = new TabPage();
             pictureBox1 = new PictureBox();
             tabPage1 = new TabPage();
+            btnCancelarOpeGes = new MaterialSkin.Controls.MaterialButton();
             btnGuardarGes = new MaterialSkin.Controls.MaterialButton();
             btnCancelarGes = new MaterialSkin.Controls.MaterialButton();
             btnAgendarGes = new MaterialSkin.Controls.MaterialButton();
@@ -143,7 +144,6 @@
             tabPage3.TabIndex = 5;
             tabPage3.Text = "Home";
             tabPage3.UseVisualStyleBackColor = true;
-          //  tabPage3.Click += tabPage3_Click;
             // 
             // pictureBox1
             // 
@@ -157,6 +157,7 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(btnCancelarOpeGes);
             tabPage1.Controls.Add(btnGuardarGes);
             tabPage1.Controls.Add(btnCancelarGes);
             tabPage1.Controls.Add(btnAgendarGes);
@@ -170,6 +171,26 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Gestion de citas";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnCancelarOpeGes
+            // 
+            btnCancelarOpeGes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnCancelarOpeGes.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            btnCancelarOpeGes.Depth = 0;
+            btnCancelarOpeGes.HighEmphasis = true;
+            btnCancelarOpeGes.Icon = null;
+            btnCancelarOpeGes.Location = new Point(999, 517);
+            btnCancelarOpeGes.Margin = new Padding(4, 6, 4, 6);
+            btnCancelarOpeGes.MouseState = MaterialSkin.MouseState.HOVER;
+            btnCancelarOpeGes.Name = "btnCancelarOpeGes";
+            btnCancelarOpeGes.NoAccentTextColor = Color.Empty;
+            btnCancelarOpeGes.Size = new Size(181, 36);
+            btnCancelarOpeGes.TabIndex = 6;
+            btnCancelarOpeGes.Text = "Cancelar Operacion";
+            btnCancelarOpeGes.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            btnCancelarOpeGes.UseAccentColor = false;
+            btnCancelarOpeGes.UseVisualStyleBackColor = true;
+            btnCancelarOpeGes.Click += btnCancelarOpeGes_Click;
             // 
             // btnGuardarGes
             // 
@@ -209,7 +230,7 @@
             btnCancelarGes.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnCancelarGes.UseAccentColor = false;
             btnCancelarGes.UseVisualStyleBackColor = true;
-            btnCancelarGes.Click += btnCancelarGes_Click;
+            btnCancelarGes.Click += btnCancelarGes_Click_1;
             // 
             // btnAgendarGes
             // 
@@ -254,13 +275,16 @@
             // 
             // dgvGestion
             // 
+            dgvGestion.AllowUserToAddRows = false;
+            dgvGestion.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvGestion.BackgroundColor = SystemColors.ButtonFace;
             dgvGestion.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvGestion.Location = new Point(145, 187);
             dgvGestion.Name = "dgvGestion";
+            dgvGestion.ReadOnly = true;
             dgvGestion.RowHeadersWidth = 62;
             dgvGestion.Size = new Size(1012, 325);
             dgvGestion.TabIndex = 1;
-          //  dgvGestion.CellContentClick += DGVGestion_CellContentClick;
             // 
             // materialCard3
             // 
@@ -287,6 +311,7 @@
             // 
             // dtpHoraGes
             // 
+            dtpHoraGes.Enabled = false;
             dtpHoraGes.Format = DateTimePickerFormat.Time;
             dtpHoraGes.Location = new Point(365, 76);
             dtpHoraGes.Name = "dtpHoraGes";
@@ -311,6 +336,7 @@
             tbMotivoGes.BackgroundImageLayout = ImageLayout.None;
             tbMotivoGes.CharacterCasing = CharacterCasing.Normal;
             tbMotivoGes.Depth = 0;
+            tbMotivoGes.Enabled = false;
             tbMotivoGes.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             tbMotivoGes.HideSelection = true;
             tbMotivoGes.LeadingIcon = null;
@@ -359,7 +385,7 @@
             cbDoctorGes.FormattingEnabled = true;
             cbDoctorGes.IntegralHeight = false;
             cbDoctorGes.ItemHeight = 43;
-            cbDoctorGes.Location = new Point(763, 9);
+            cbDoctorGes.Location = new Point(782, 9);
             cbDoctorGes.MaxDropDownItems = 4;
             cbDoctorGes.MouseState = MaterialSkin.MouseState.OUT;
             cbDoctorGes.Name = "cbDoctorGes";
@@ -373,6 +399,7 @@
             tbNombreGes.BackgroundImageLayout = ImageLayout.None;
             tbNombreGes.CharacterCasing = CharacterCasing.Normal;
             tbNombreGes.Depth = 0;
+            tbNombreGes.Enabled = false;
             tbNombreGes.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             tbNombreGes.HideSelection = true;
             tbNombreGes.LeadingIcon = null;
@@ -397,7 +424,9 @@
             // 
             // dtFechaGes
             // 
+            dtFechaGes.Enabled = false;
             dtFechaGes.Location = new Point(67, 17);
+            dtFechaGes.MinDate = new DateTime(2025, 12, 13, 0, 0, 0, 0);
             dtFechaGes.Name = "dtFechaGes";
             dtFechaGes.Size = new Size(300, 31);
             dtFechaGes.TabIndex = 3;
@@ -464,7 +493,6 @@
             materialCard2.Padding = new Padding(14);
             materialCard2.Size = new Size(599, 65);
             materialCard2.TabIndex = 2;
-           // materialCard2.Paint += materialCard2_Paint;
             // 
             // LblDiag
             // 
@@ -478,7 +506,6 @@
             LblDiag.Size = new Size(98, 19);
             LblDiag.TabIndex = 0;
             LblDiag.Text = "Diagnosticos ";
-           // LblDiag.Click += LblDiag_Click;
             // 
             // materialCard1
             // 
@@ -524,7 +551,7 @@
             btnBuscarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnBuscarDig.UseAccentColor = false;
             btnBuscarDig.UseVisualStyleBackColor = true;
-            btnBuscarDig.Click += btnBuscarDig_Click;
+            btnBuscarDig.Click += btnBuscarDig_Click_1;
             // 
             // btnFiltrarDig
             // 
@@ -544,7 +571,7 @@
             btnFiltrarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnFiltrarDig.UseAccentColor = false;
             btnFiltrarDig.UseVisualStyleBackColor = true;
-            btnFiltrarDig.Click += btnFiltrarDig_Click;
+            btnFiltrarDig.Click += btnFiltrarDig_Click_1;
             // 
             // mtbTelefonoDig
             // 
@@ -555,13 +582,14 @@
             mtbTelefonoDig.BeepOnError = false;
             mtbTelefonoDig.CutCopyMaskFormat = MaskFormat.IncludeLiterals;
             mtbTelefonoDig.Depth = 0;
+            mtbTelefonoDig.Enabled = false;
             mtbTelefonoDig.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             mtbTelefonoDig.HidePromptOnLeave = false;
             mtbTelefonoDig.HideSelection = true;
             mtbTelefonoDig.InsertKeyMode = InsertKeyMode.Default;
             mtbTelefonoDig.LeadingIcon = null;
             mtbTelefonoDig.Location = new Point(39, 252);
-            mtbTelefonoDig.Mask = "";
+            mtbTelefonoDig.Mask = "+1 (000)-000-0000";
             mtbTelefonoDig.MaxLength = 32767;
             mtbTelefonoDig.MouseState = MaterialSkin.MouseState.OUT;
             mtbTelefonoDig.Name = "mtbTelefonoDig";
@@ -581,12 +609,12 @@
             mtbTelefonoDig.SkipLiterals = true;
             mtbTelefonoDig.TabIndex = 11;
             mtbTelefonoDig.TabStop = false;
+            mtbTelefonoDig.Text = "+1 (___)-___-____";
             mtbTelefonoDig.TextAlign = HorizontalAlignment.Left;
             mtbTelefonoDig.TextMaskFormat = MaskFormat.IncludePromptAndLiterals;
             mtbTelefonoDig.TrailingIcon = null;
             mtbTelefonoDig.UseSystemPasswordChar = false;
             mtbTelefonoDig.ValidatingType = null;
-           // mtbTelefonoDig.Click += mtbTelefonoDig_Click;
             // 
             // lblTelefonoGes
             // 
@@ -599,11 +627,12 @@
             lblTelefonoGes.Size = new Size(64, 19);
             lblTelefonoGes.TabIndex = 10;
             lblTelefonoGes.Text = "Telefono";
-            //lblTelefonoGes.Click += lblTelefonoGes_Click;
             // 
             // dtpFechaDig
             // 
+            dtpFechaDig.Enabled = false;
             dtpFechaDig.Location = new Point(39, 90);
+            dtpFechaDig.MinDate = new DateTime(2025, 12, 13, 0, 0, 0, 0);
             dtpFechaDig.Name = "dtpFechaDig";
             dtpFechaDig.Size = new Size(338, 31);
             dtpFechaDig.TabIndex = 9;
@@ -614,6 +643,7 @@
             mtbDescripcionDig.BackgroundImageLayout = ImageLayout.None;
             mtbDescripcionDig.CharacterCasing = CharacterCasing.Normal;
             mtbDescripcionDig.Depth = 0;
+            mtbDescripcionDig.Enabled = false;
             mtbDescripcionDig.HideSelection = true;
             mtbDescripcionDig.Location = new Point(38, 349);
             mtbDescripcionDig.MaxLength = 32767;
@@ -638,6 +668,7 @@
             tbNombreDig.BackgroundImageLayout = ImageLayout.None;
             tbNombreDig.CharacterCasing = CharacterCasing.Normal;
             tbNombreDig.Depth = 0;
+            tbNombreDig.Enabled = false;
             tbNombreDig.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             tbNombreDig.HideSelection = true;
             tbNombreDig.LeadingIcon = null;
@@ -659,7 +690,6 @@
             tbNombreDig.TextAlign = HorizontalAlignment.Left;
             tbNombreDig.TrailingIcon = null;
             tbNombreDig.UseSystemPasswordChar = false;
-            //tbNombreDig.Click += materialTextBox21_Click;
             // 
             // btnGuardarDig
             // 
@@ -680,7 +710,7 @@
             btnGuardarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnGuardarDig.UseAccentColor = false;
             btnGuardarDig.UseVisualStyleBackColor = true;
-            btnGuardarDig.Click += materialButton2_Click;
+            btnGuardarDig.Click += btnGuardarDig_Click_1;
             // 
             // btnRegistrarDig
             // 
@@ -701,7 +731,7 @@
             btnRegistrarDig.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnRegistrarDig.UseAccentColor = false;
             btnRegistrarDig.UseVisualStyleBackColor = true;
-            btnRegistrarDig.Click += materialButton1_Click;
+            btnRegistrarDig.Click += btnRegistrarDig_Click_1;
             // 
             // lblRegistrsrDig
             // 
@@ -739,7 +769,6 @@
             materialLabel2.Size = new Size(151, 19);
             materialLabel2.TabIndex = 2;
             materialLabel2.Text = "Nombre del Paciente ";
-           // materialLabel2.Click += materialLabel2_Click;
             // 
             // materialLabel1
             // 
@@ -756,13 +785,17 @@
             // 
             // dgvDiagnosticos
             // 
+            dgvDiagnosticos.AllowUserToAddRows = false;
+            dgvDiagnosticos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvDiagnosticos.BackgroundColor = SystemColors.ButtonFace;
             dgvDiagnosticos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvDiagnosticos.Location = new Point(485, 14);
             dgvDiagnosticos.Name = "dgvDiagnosticos";
+            dgvDiagnosticos.ReadOnly = true;
             dgvDiagnosticos.RowHeadersWidth = 62;
             dgvDiagnosticos.Size = new Size(734, 454);
             dgvDiagnosticos.TabIndex = 0;
-            //dgvDiagnosticos.CellContentClick += dataGridView1_CellContentClick;
+            dgvDiagnosticos.CellContentClick += dgvDiagnosticos_CellContentClick;
             // 
             // tabPage4
             // 
@@ -792,7 +825,6 @@
             materialCard10.Padding = new Padding(14);
             materialCard10.Size = new Size(337, 120);
             materialCard10.TabIndex = 9;
-           // materialCard10.Paint += materialCard10_Paint;
             // 
             // cbDoctorDis
             // 
@@ -852,6 +884,7 @@
             // dtpDiasSaliDis
             // 
             dtpDiasSaliDis.Location = new Point(88, 177);
+            dtpDiasSaliDis.MinDate = new DateTime(2025, 12, 13, 0, 0, 0, 0);
             dtpDiasSaliDis.Name = "dtpDiasSaliDis";
             dtpDiasSaliDis.Size = new Size(300, 31);
             dtpDiasSaliDis.TabIndex = 8;
@@ -881,7 +914,6 @@
             materialLabel10.Size = new Size(171, 19);
             materialLabel10.TabIndex = 2;
             materialLabel10.Text = "Seleccione dia de salida";
-          //  materialLabel10.Click += materialLabel10_Click;
             // 
             // materialCard8
             // 
@@ -982,6 +1014,7 @@
             // dtpDiasEntraDis
             // 
             dtpDiasEntraDis.Location = new Point(88, 73);
+            dtpDiasEntraDis.MinDate = new DateTime(2025, 12, 13, 0, 0, 0, 0);
             dtpDiasEntraDis.Name = "dtpDiasEntraDis";
             dtpDiasEntraDis.Size = new Size(300, 31);
             dtpDiasEntraDis.TabIndex = 5;
@@ -1004,7 +1037,7 @@
             btnGuardarDis.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btnGuardarDis.UseAccentColor = false;
             btnGuardarDis.UseVisualStyleBackColor = true;
-          //  btnGuardarDis.Click += btnGuardarDis_Click;
+            btnGuardarDis.Click += btnGuardarDis_Click;
             // 
             // materialCard7
             // 
@@ -1019,7 +1052,6 @@
             materialCard7.Padding = new Padding(14);
             materialCard7.Size = new Size(269, 39);
             materialCard7.TabIndex = 3;
-            //materialCard7.Paint += materialCard7_Paint;
             // 
             // materialLabel4
             // 
@@ -1133,13 +1165,14 @@
             lblBusacarCitAg.Size = new Size(166, 19);
             lblBusacarCitAg.TabIndex = 0;
             lblBusacarCitAg.Text = "Buscar cita de Paciente";
-            //lblBusacarCitAg.Click += lblBusacarCitAg_Click;
             // 
             // dgvCitasAg
             // 
+            dgvCitasAg.BackgroundColor = SystemColors.ButtonFace;
             dgvCitasAg.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvCitasAg.Location = new Point(449, 75);
             dgvCitasAg.Name = "dgvCitasAg";
+            dgvCitasAg.ReadOnly = true;
             dgvCitasAg.RowHeadersWidth = 62;
             dgvCitasAg.Size = new Size(764, 381);
             dgvCitasAg.TabIndex = 0;
@@ -1151,6 +1184,7 @@
             ClientSize = new Size(1268, 704);
             Controls.Add(materialTabControl1);
             DrawerTabControl = materialTabControl1;
+            MaximizeBox = false;
             Name = "FMenuPrincipal";
             Text = "FMenuPrincipal";
             materialTabControl1.ResumeLayout(false);
@@ -1256,5 +1290,6 @@
         private MaterialSkin.Controls.MaterialCard materialCard11;
         private MaterialSkin.Controls.MaterialLabel materialLabel10;
         private DateTimePicker dtpDiasSaliDis;
+        private MaterialSkin.Controls.MaterialButton btnCancelarOpeGes;
     }
 }

@@ -14,7 +14,7 @@ namespace CapaNegocio.Clases
         // Diccionario para manejar la agenda de citas por doctor
         // Clave: ID del doctor
         // Valor: Lista de citas del doctor
-        private readonly Dictionary<int, List<Cita>> _agenda = new Dictionary<int, List<Cita>>();
+        private readonly Dictionary<int, List<Cita2>> _agenda = new Dictionary<int, List<Cita2>>();
 
         // Lista de doctores registrados en el sistema
         private readonly List<Doctor> _doctores = new List<Doctor>();
@@ -47,7 +47,7 @@ namespace CapaNegocio.Clases
         // Implementación de IAgendable
 
     
-        public async Task<bool> AgendarCita(Cita cita)
+        public async Task<bool> AgendarCita(Cita2 cita)
         {
             // Validar disponibilidad del doctor en la fecha y hora solicitadas
             if (!await VerificarDisponibilidad(cita.Doctor.IdDoctor, cita.Fecha, cita.Hora))
@@ -67,7 +67,7 @@ namespace CapaNegocio.Clases
             // Inicializar la lista de citas para el doctor si no existe
             if (!_agenda.ContainsKey(cita.Doctor.IdDoctor))
             {
-                _agenda[cita.Doctor.IdDoctor] = new List<Cita>();
+                _agenda[cita.Doctor.IdDoctor] = new List<Cita2>();
             }
 
             // Agregar la cita a la agenda del doctor
@@ -183,7 +183,7 @@ namespace CapaNegocio.Clases
         }
 
         
-        public async Task<List<Cita>> ObtenerCitasPorFecha(DateTime fecha)
+        public async Task<List<Cita2>> ObtenerCitasPorFecha(DateTime fecha)
         {
             // En una implementación real, esto consultaría a la base de datos
             await Task.Delay(100); // Simular operación asíncrona

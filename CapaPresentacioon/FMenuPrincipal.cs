@@ -15,12 +15,21 @@ namespace CapaPresentacioon
         private bool modoEditar = false;
         private int idCitaSeleccionada = 0;
 
+        private bool modoEditarDiagnostico = false;
+        private int idDiagnosticoSeleccionado = 0;
+
         private string Rol;
         private int IdDoctor;
 
         public FMenuPrincipal(string rol, int idDoctor)
         {
             InitializeComponent();
+
+            // PRIMERO: Asignar las variables de rol e ID
+            Rol = rol;
+            IdDoctor = idDoctor;
+
+            this.Text = $"Clinica SanRafael";
 
             // Configurar MaterialSkin
             var materialSkinManager = MaterialSkin.MaterialSkinManager.Instance;
@@ -35,29 +44,160 @@ namespace CapaPresentacioon
                 MaterialSkin.TextShade.WHITE
             );
 
-            Rol = rol;
-            IdDoctor = idDoctor;
+            // Configurar KeyPress handlers
+            this.tbNombreGes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNombreGes_KeyPress);
+            this.tbMotivoGes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbMotivoGes_KeyPress);
+            this.tbNombreDig.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNombreDig_KeyPress);
+            this.mtbDescripcionDig.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mtbDescripcionDig_KeyPress);
 
+            // Conectar evento del TabControl
+            materialTabControl1.SelectedIndexChanged += tabControl_SelectedIndexChanged;
+
+            // CONFIGURAR INTERFAZ POR ROL (SOLO UNA VEZ)
             ConfigurarInterfazPorRol();
-            CargarDoctores();
-            CargarCitas(); // carga el grid de gestión (dgvGestion)
+
+            // Cargar datos iniciales
+            CargarCitas();
+            CargarTodosDoctoresDisponibilidad();
         }
 
-        // -------------------------
-        // TabControl SelectedIndexChanged
-        // -------------------------
+        // ========================================================================
+        // EVENTOS DEL TABCONTROL
+        // ========================================================================
+
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Asegúrate de que el texto del tab coincida exactamente con el del diseñador
-            if (materialTabControl1.SelectedTab != null && materialTabControl1.SelectedTab.Text == "Citas Agendadas")
+            if (materialTabControl1.SelectedTab != null)
             {
-                CargarCitasAgendadas();
+                string tabName = materialTabControl1.SelectedTab.Text;
+
+                if (tabName == "Citas Agendadas")
+                {
+                    CargarCitasAgendadas();
+                }
+                else if (tabName == "Disponibilidad")
+                {
+                    CargarTodosDoctoresDisponibilidad();
+                }
+                else if (tabName == "Gestion De Citas")
+                {
+                    CargarCitas();
+                    LimpiarCamposGestion();
+                    SetCampos(false);
+                    btnAgendarGes.Enabled = true;
+                    btnEditarGes.Enabled = true;
+                    btnCancelarGes.Enabled = true;
+                    btnGuardarGes.Enabled = false;
+                }
+                else if (tabName == "Diagnosticos")
+                {
+                    CargarDiagnosticos();
+                    LimpiarCamposDiagnostico();
+                    ActivarCamposDiagnostico(false);
+                    btnGuardarDig.Enabled = false;
+                    btnRegistrarDig.Enabled = true;
+                    btnFiltrarDig.Enabled = true;
+                    btnBuscarDig.Enabled = false;
+                }
             }
         }
 
-        // -------------------------
-        // Métodos para Citas Agendadas
-        // -------------------------
+        // ========================================================================
+        // SECCIÓN: DISPONIBILIDAD
+        // ========================================================================
+
+        private void CargarTodosDoctoresDisponibilidad()
+        {
+            try
+            {
+                var dt = Doctor.ObtenerTodos();
+
+                if (dt.Rows.Count == 0)
+                {
+                    MessageBox.Show("No hay doctores en la base de datos.", "Aviso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                cbDoctorDis.DataSource = dt;
+                cbDoctorDis.DisplayMember = "Nombre";
+                cbDoctorDis.ValueMember = "IdDoctor";
+
+                if (Rol == "Medico" && cbDoctorDis.Items.Count > 0)
+                {
+                    cbDoctorDis.SelectedValue = IdDoctor;
+                    cbDoctorDis.Enabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar doctores: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnGuardarDis_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cbDoctorDis.SelectedValue == null)
+                {
+                    MessageBox.Show("Seleccione un doctor.", "Aviso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int idDoctor = Convert.ToInt32(cbDoctorDis.SelectedValue);
+
+                DateTime fechaEntrada = dtpDiasEntraDis.Value.Date;
+                DateTime fechaSalida = dtpDiasSaliDis.Value.Date;
+                TimeSpan horaEntrada = dtpHoraEntDis.Value.TimeOfDay;
+                TimeSpan horaSalida = dtpHoraSalDis.Value.TimeOfDay;
+
+                if (fechaSalida < fechaEntrada)
+                {
+                    MessageBox.Show("La fecha de salida no puede ser menor a la fecha de entrada.",
+                        "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (horaSalida <= horaEntrada)
+                {
+                    MessageBox.Show("La hora de salida debe ser mayor a la hora de entrada.",
+                        "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string resultado = Disponibilidad.GuardarDisponibilidad(
+                    idDoctor, fechaEntrada, fechaSalida, horaEntrada, horaSalida);
+
+                if (resultado == "OK")
+                {
+                    MessageBox.Show("Disponibilidad guardada correctamente.", "Éxito",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    dtpDiasEntraDis.Value = DateTime.Today;
+                    dtpDiasSaliDis.Value = DateTime.Today;
+                    dtpHoraEntDis.Value = DateTime.Today.AddHours(8);
+                    dtpHoraSalDis.Value = DateTime.Today.AddHours(17);
+                }
+                else
+                {
+                    MessageBox.Show($"Error al guardar: {resultado}", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // ========================================================================
+        // SECCIÓN: CITAS AGENDADAS
+        // ========================================================================
+
         private void CargarCitasAgendadas()
         {
             dgvCitasAg.DataSource = GestionDeCitas.MostrarCitasAgendadas();
@@ -66,7 +206,6 @@ namespace CapaPresentacioon
 
         private void FormatearGridCitasAg(DataGridView dgv)
         {
-            // Opcional: ajustar columnas, ancho, formato de fecha/hora
             if (dgv.Columns.Contains("Fecha"))
             {
                 dgv.Columns["Fecha"].DefaultCellStyle.Format = "yyyy-MM-dd";
@@ -80,9 +219,6 @@ namespace CapaPresentacioon
             dgv.MultiSelect = false;
         }
 
-        // -------------------------
-        // Buscador (btnBuscarCitAg)
-        // -------------------------
         private void btnBuscarCitAg_Click(object sender, EventArgs e)
         {
             string nombre = tbNombreCitAg.Text.Trim();
@@ -101,13 +237,15 @@ namespace CapaPresentacioon
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al buscar citas: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al buscar citas: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // -------------------------
-        // Resto de métodos (limpieza, gestión, diagnósticos...)
-        // -------------------------
+        // ========================================================================
+        // SECCIÓN: DIAGNÓSTICOS
+        // ========================================================================
+
         private void ActivarCamposDiagnostico(bool enable)
         {
             tbNombreDig.Enabled = enable;
@@ -126,7 +264,412 @@ namespace CapaPresentacioon
 
         private void CargarDiagnosticos()
         {
-            dgvDiagnosticos.DataSource = Diagnostico.MostrarDiagnosticos();
+            try
+            {
+                dgvDiagnosticos.DataSource = Diagnostico.MostrarDiagnosticos();
+                FormatearGridDiagnosticos(dgvDiagnosticos);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar diagnósticos: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void FormatearGridDiagnosticos(DataGridView dgv)
+        {
+            if (dgv.Columns.Contains("Fecha"))
+            {
+                dgv.Columns["Fecha"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
+                dgv.Columns["Fecha"].Width = 150;
+            }
+            if (dgv.Columns.Contains("Paciente"))
+            {
+                dgv.Columns["Paciente"].Width = 150;
+            }
+            if (dgv.Columns.Contains("Telefono"))
+            {
+                dgv.Columns["Telefono"].Width = 120;
+            }
+            if (dgv.Columns.Contains("Descripcion"))
+            {
+                dgv.Columns["Descripcion"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
+            if (dgv.Columns.Contains("IdDiagnostico"))
+            {
+                dgv.Columns["IdDiagnostico"].Width = 80;
+            }
+
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgv.MultiSelect = false;
+            dgv.AllowUserToAddRows = false;
+            dgv.ReadOnly = true;
+        }
+
+        private void btnRegistrarDig_Click(object sender, EventArgs e)
+        {
+            LimpiarCamposDiagnostico();
+            ActivarCamposDiagnostico(true);
+
+            btnGuardarDig.Enabled = true;
+            btnRegistrarDig.Enabled = false;
+            btnFiltrarDig.Enabled = false;
+
+            tbNombreDig.Focus();
+        }
+
+        private void btnGuardarDig_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string nombre = tbNombreDig.Text.Trim();
+                string telefono = mtbTelefonoDig.Text.Trim();
+                string descripcion = mtbDescripcionDig.Text.Trim();
+                DateTime fecha = dtpFechaDig.Value;
+
+                if (string.IsNullOrEmpty(nombre))
+                {
+                    MessageBox.Show("Debe ingresar el nombre del paciente.", "Validación",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    tbNombreDig.Focus();
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(descripcion))
+                {
+                    MessageBox.Show("Debe ingresar una descripción del diagnóstico.", "Validación",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    mtbDescripcionDig.Focus();
+                    return;
+                }
+
+                Diagnostico.GuardarDiagnostico(nombre, telefono, fecha, descripcion);
+
+                MessageBox.Show("Diagnóstico guardado correctamente.", "Éxito",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                CargarDiagnosticos();
+                LimpiarCamposDiagnostico();
+                ActivarCamposDiagnostico(false);
+
+                btnGuardarDig.Enabled = false;
+                btnRegistrarDig.Enabled = true;
+                btnFiltrarDig.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al guardar diagnóstico: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnFiltrarDig_Click(object sender, EventArgs e)
+        {
+            tbNombreDig.Enabled = true;
+            mtbTelefonoDig.Enabled = false;
+            dtpFechaDig.Enabled = false;
+            mtbDescripcionDig.Enabled = false;
+
+            tbNombreDig.Clear();
+            tbNombreDig.Focus();
+
+            btnBuscarDig.Enabled = true;
+            btnRegistrarDig.Enabled = false;
+        }
+
+        private void btnBuscarDig_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string nombre = tbNombreDig.Text.Trim();
+
+                if (string.IsNullOrEmpty(nombre))
+                {
+                    CargarDiagnosticos();
+                }
+                else
+                {
+                    DataTable dt = Diagnostico.BuscarDiagnosticoPorNombre(nombre);
+                    dgvDiagnosticos.DataSource = dt;
+                    FormatearGridDiagnosticos(dgvDiagnosticos);
+
+                    if (dt.Rows.Count == 0)
+                    {
+                        MessageBox.Show($"No se encontraron diagnósticos para '{nombre}'.",
+                            "Sin resultados", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+
+                tbNombreDig.Clear();
+                ActivarCamposDiagnostico(false);
+                btnBuscarDig.Enabled = false;
+                btnRegistrarDig.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al buscar: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dgvDiagnosticos_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            try
+            {
+                DataGridViewRow row = dgvDiagnosticos.Rows[e.RowIndex];
+
+                tbNombreDig.Text = row.Cells["Paciente"].Value.ToString();
+                mtbTelefonoDig.Text = row.Cells["Telefono"].Value.ToString();
+                dtpFechaDig.Value = Convert.ToDateTime(row.Cells["Fecha"].Value);
+                mtbDescripcionDig.Text = row.Cells["Descripcion"].Value.ToString();
+
+                ActivarCamposDiagnostico(false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar diagnóstico: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnRegistrarDig_Click_1(object sender, EventArgs e)
+        {
+            LimpiarCamposDiagnostico();
+            ActivarCamposDiagnostico(true);
+
+            btnGuardarDig.Enabled = true;
+            btnRegistrarDig.Enabled = false;
+            btnFiltrarDig.Enabled = false;
+
+            tbNombreDig.Focus();
+        }
+
+        private void btnGuardarDig_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                string nombre = tbNombreDig.Text.Trim();
+                string telefono = mtbTelefonoDig.Text.Trim();
+                string descripcion = mtbDescripcionDig.Text.Trim();
+                DateTime fecha = dtpFechaDig.Value;
+
+                if (string.IsNullOrEmpty(nombre))
+                {
+                    MessageBox.Show("Debe ingresar el nombre del paciente.", "Validación",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    tbNombreDig.Focus();
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(descripcion))
+                {
+                    MessageBox.Show("Debe ingresar una descripción del diagnóstico.", "Validación",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    mtbDescripcionDig.Focus();
+                    return;
+                }
+
+                Diagnostico.GuardarDiagnostico(nombre, telefono, fecha, descripcion);
+
+                MessageBox.Show("Diagnóstico guardado correctamente.", "Éxito",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                CargarDiagnosticos();
+                LimpiarCamposDiagnostico();
+                ActivarCamposDiagnostico(false);
+
+                btnGuardarDig.Enabled = false;
+                btnRegistrarDig.Enabled = true;
+                btnFiltrarDig.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al guardar diagnóstico: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnFiltrarDig_Click_1(object sender, EventArgs e)
+        {
+            tbNombreDig.Enabled = true;
+            mtbTelefonoDig.Enabled = false;
+            dtpFechaDig.Enabled = false;
+            mtbDescripcionDig.Enabled = false;
+
+            tbNombreDig.Clear();
+            tbNombreDig.Focus();
+
+            btnBuscarDig.Enabled = true;
+            btnRegistrarDig.Enabled = false;
+        }
+
+        private void btnBuscarDig_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                string nombre = tbNombreDig.Text.Trim();
+
+                if (string.IsNullOrEmpty(nombre))
+                {
+                    CargarDiagnosticos();
+                }
+                else
+                {
+                    DataTable dt = Diagnostico.BuscarDiagnosticoPorNombre(nombre);
+                    dgvDiagnosticos.DataSource = dt;
+                    FormatearGridDiagnosticos(dgvDiagnosticos);
+
+                    if (dt.Rows.Count == 0)
+                    {
+                        MessageBox.Show($"No se encontraron diagnósticos para el paciente '{nombre}'.",
+                            "Sin resultados", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+
+                tbNombreDig.Clear();
+                ActivarCamposDiagnostico(false);
+                btnBuscarDig.Enabled = false;
+                btnRegistrarDig.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al buscar: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dgvDiagnosticos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            try
+            {
+                DataGridViewRow row = dgvDiagnosticos.Rows[e.RowIndex];
+
+                tbNombreDig.Text = row.Cells["Paciente"].Value.ToString();
+                mtbTelefonoDig.Text = row.Cells["Telefono"].Value.ToString();
+                dtpFechaDig.Value = Convert.ToDateTime(row.Cells["Fecha"].Value);
+                mtbDescripcionDig.Text = row.Cells["Descripcion"].Value.ToString();
+
+                ActivarCamposDiagnostico(false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar diagnóstico: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // ========================================================================
+        // SECCIÓN: GESTIÓN DE CITAS
+        // ========================================================================
+
+        private string ObtenerNombreDoctor(int idDoctor)
+        {
+            try
+            {
+                var dt = Doctor.ObtenerTodos();
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (Convert.ToInt32(row["IdDoctor"]) == idDoctor)
+                    {
+                        return row["Nombre"].ToString();
+                    }
+                }
+                return "Doctor";
+            }
+            catch
+            {
+                return "Doctor";
+            }
+        }
+
+        private void ConfigurarInterfazPorRol()
+        {
+            if (Rol == "Medico")
+            {
+                // Para MÉDICOS: Disponibilidad, Citas Agendadas y Diagnósticos
+                foreach (TabPage tab in materialTabControl1.TabPages)
+                {
+                    string tabName = tab.Name.ToLower();
+                    string tabText = tab.Text.ToLower();
+
+                    // Habilitar tabs para médicos
+                    if (tabName == "tabpage2" ||                          // Registrar Diagnóstico
+                        tabText.Contains("disponibilidad") ||
+                        tabText.Contains("citas agendadas") ||
+                        tabText.Contains("diagnostico"))
+                    {
+                        tab.Enabled = true;
+                    }
+                    else
+                    {
+                        tab.Enabled = false;
+                    }
+                }
+
+                // Seleccionar la primera pestaña habilitada
+                materialTabControl1.SelectedTab = materialTabControl1.TabPages
+                    .Cast<TabPage>()
+                    .FirstOrDefault(t => t.Enabled);
+
+                this.Text = $"Clinica SanRafael - Dr. {ObtenerNombreDoctor(IdDoctor)}";
+            }
+            else if (Rol == "Secretaria")
+            {
+                // Para SECRETARIAS: Todo excepto Disponibilidad
+                foreach (TabPage tab in materialTabControl1.TabPages)
+                {
+                    string tabText = tab.Text.ToLower();
+
+                    if (tabText.Contains("disponibilidad"))
+                    {
+                        tab.Enabled = false;
+                    }
+                    else
+                    {
+                        tab.Enabled = true;
+                    }
+                }
+
+                this.Text = "Clinica SanRafael - Secretaría";
+            }
+            else
+            {
+                // Rol desconocido - deshabilitar todo por seguridad
+                foreach (TabPage tab in materialTabControl1.TabPages)
+                {
+                    tab.Enabled = false;
+                }
+
+                MessageBox.Show("Rol no reconocido. Contacte al administrador.",
+                    "Error de Permisos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CargarDoctores()
+        {
+            try
+            {
+                var dt = Doctor.ObtenerTodos();
+
+                cbDoctorGes.DataSource = dt;
+                cbDoctorGes.DisplayMember = "Nombre";
+                cbDoctorGes.ValueMember = "IdDoctor";
+
+                if (dt.Rows.Count == 0)
+                {
+                    MessageBox.Show("No hay doctores registrados en el sistema.",
+                        "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar doctores: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void RecargarCita(int id)
@@ -140,6 +683,11 @@ namespace CapaPresentacioon
             }
 
             tbNombreGes.Text = cita.Paciente?.Nombre ?? "";
+            dtFechaGes.Value = cita.Fecha.Date;
+            dtpHoraGes.Value = DateTime.Today.Add(cita.Hora);
+
+            CargarDoctores();
+
             if (cita.Doctor != null && cita.Doctor.IdDoctor != 0)
             {
                 try
@@ -148,11 +696,11 @@ namespace CapaPresentacioon
                 }
                 catch
                 {
-                    cbDoctorGes.Text = cita.Doctor.Nombre;
+                    MessageBox.Show($"Nota: El Dr. {cita.Doctor.Nombre} no está en la lista.",
+                        "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
-            dtFechaGes.Value = cita.Fecha.Date;
-            dtpHoraGes.Value = DateTime.Today.Add(cita.Hora);
+
             tbMotivoGes.Text = cita.Motivo ?? "";
         }
 
@@ -169,173 +717,77 @@ namespace CapaPresentacioon
         {
             tbNombreGes.Text = "";
             tbMotivoGes.Text = "";
-            cbDoctorGes.SelectedIndex = -1;
-
+            cbDoctorGes.DataSource = null;
+            cbDoctorGes.Items.Clear();
             dtFechaGes.Value = DateTime.Today;
             dtpHoraGes.Value = DateTime.Now;
-
             idCitaSeleccionada = 0;
+            modoEditar = false;
         }
 
         private void CargarCitas()
         {
             dgvGestion.DataSource = GestionDeCitas.MostrarCitas();
+            FormatearGridGestion(dgvGestion);
         }
 
-        private void ConfigurarInterfazPorRol()
+        private void FormatearGridGestion(DataGridView dgv)
         {
-            if (Rol == "Doctor")
+            if (dgv.Columns.Contains("Fecha"))
             {
-                foreach (TabPage tab in materialTabControl1.TabPages)
-                {
-                    if (tab.Text == "Disponibilidad" ||
-                        tab.Text == "Citas Agendadas" ||
-                        tab.Text == "Diagnosticos")
-                    {
-                        tab.Enabled = true;
-                    }
-                    else
-                    {
-                        tab.Enabled = false;
-                    }
-                }
+                dgv.Columns["Fecha"].DefaultCellStyle.Format = "yyyy-MM-dd";
             }
-            else if (Rol == "Secretaria")
+            if (dgv.Columns.Contains("Hora"))
             {
-                foreach (TabPage tab in materialTabControl1.TabPages)
-                {
-                    if (tab.Text == "Disponibilidad")
-                        tab.Enabled = false;
-                    else
-                        tab.Enabled = true;
-                }
+                dgv.Columns["Hora"].DefaultCellStyle.Format = @"hh\:mm";
             }
+            dgv.AutoResizeColumns();
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgv.MultiSelect = false;
         }
 
-        private void CargarDoctores()
+        private void btnAgendarGes_Click(object sender, EventArgs e)
         {
-            var dt = ObtenerDoc.ObtenerDocDis(dtFechaGes.Value, dtpHoraGes.Value.TimeOfDay);
+            modoEditar = false;
+            idCitaSeleccionada = 0;
 
-            cbDoctorGes.DataSource = dt;
-            cbDoctorGes.DisplayMember = "Nombre";
-            cbDoctorGes.ValueMember = "IdDoctor";
-        }
+            LimpiarCamposGestion();
+            SetCampos(true);
 
-        // -------------------------
-        // Eventos y botones (mantengo tu lógica, solo limpiada)
-        // -------------------------
-        private void dtFechaGes_ValueChanged(object sender, EventArgs e)
-        {
+            dtFechaGes.Value = DateTime.Today;
+            dtpHoraGes.Value = DateTime.Now;
+
             CargarDoctores();
-        }
 
-        private void dtpHoraGes_ValueChanged(object sender, EventArgs e)
-        {
-            CargarDoctores();
-        }
+            btnEditarGes.Enabled = false;
+            btnCancelarGes.Enabled = false;
+            btnCancelarOpeGes.Enabled = true;
+            btnGuardarGes.Enabled = true;
+            btnAgendarGes.Enabled = false;
 
-        private void materialButton2_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                DateTime fecha = dtpFechaDig.Value;
-                string descripcion = mtbDescripcionDig.Text.Trim();
-
-                if (string.IsNullOrWhiteSpace(descripcion))
-                {
-                    MessageBox.Show("Debe ingresar una descripción.");
-                    return;
-                }
-
-                int idCita = 0;
-
-                using (SqlConnection con = new SqlConnection(ConexionBD.Cn))
-                {
-                    con.Open();
-                    string query = "INSERT INTO Diagnostico (IdCita, Fecha, Descripcion) VALUES (@cita, @fecha, @desc)";
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@cita", idCita);
-                    cmd.Parameters.AddWithValue("@fecha", fecha);
-                    cmd.Parameters.AddWithValue("@desc", descripcion);
-                    cmd.ExecuteNonQuery();
-                }
-
-                MessageBox.Show("Diagnóstico guardado correctamente.");
-                CargarDiagnosticos();
-                mtbDescripcionDig.Clear();
-                dtpFechaDig.Value = DateTime.Today;
-                tbNombreDig.Clear();
-                mtbTelefonoDig.Clear();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al guardar diagnóstico: " + ex.Message);
-            }
+            tbNombreGes.Focus();
         }
 
         private void btnEditarGes_Click(object sender, EventArgs e)
         {
             if (dgvGestion.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Seleccione una cita para editar.", "Aviso");
+                MessageBox.Show("Seleccione una cita para editar.", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             idCitaSeleccionada = Convert.ToInt32(dgvGestion.SelectedRows[0].Cells["IdCita"].Value);
-            RecargarCita(idCitaSeleccionada);
 
             SetCampos(true);
+            RecargarCita(idCitaSeleccionada);
+
             modoEditar = true;
 
             btnGuardarGes.Enabled = true;
             btnEditarGes.Enabled = false;
-            btnCancelarGes.Enabled = true;
-            btnAgendarGes.Enabled = false;
-        }
-
-        private void btnCancelarGes_Click(object sender, EventArgs e)
-        {
-            if (dgvGestion.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Seleccione una cita para cancelar.");
-                return;
-            }
-
-            int idCita = Convert.ToInt32(dgvGestion.SelectedRows[0].Cells["IdCita"].Value);
-
-            DialogResult dr = MessageBox.Show(
-                "¿Seguro que desea cancelar (eliminar) esta cita?",
-                "Confirmación",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning
-            );
-
-            if (dr == DialogResult.Yes)
-            {
-                GestionDeCitas.CancelarCita(idCita);
-                CargarCitas();
-                LimpiarCamposGestion();
-
-                btnAgendarGes.Enabled = true;
-                btnEditarGes.Enabled = true;
-                btnCancelarGes.Enabled = true;
-                btnGuardarGes.Enabled = false;
-
-                SetCampos(false);
-            }
-        }
-
-        private void btnAgendarGes_Click(object sender, EventArgs e)
-        {
-            modoEditar = false;
-
-            SetCampos(true);
-            LimpiarCamposGestion();
-            CargarDoctores();
-
-            btnEditarGes.Enabled = false;
             btnCancelarGes.Enabled = false;
-            btnGuardarGes.Enabled = true;
+            btnCancelarOpeGes.Enabled = true;
             btnAgendarGes.Enabled = false;
         }
 
@@ -343,30 +795,37 @@ namespace CapaPresentacioon
         {
             try
             {
-                if (dgvGestion.CurrentRow == null)
-                {
-                    MessageBox.Show("Seleccione una cita para guardar cambios.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                int idCita = Convert.ToInt32(dgvGestion.CurrentRow.Cells["IdCita"].Value);
-
                 string nombrePaciente = tbNombreGes.Text.Trim();
                 if (string.IsNullOrEmpty(nombrePaciente))
                 {
-                    MessageBox.Show("Ingrese el nombre del paciente.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Ingrese el nombre del paciente.", "Aviso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    tbNombreGes.Focus();
                     return;
                 }
 
                 int idPaciente = Paciente.ObtenerIdPacientePorNombre(nombrePaciente);
                 if (idPaciente == 0)
                 {
-                    idPaciente = Paciente.CrearPaciente(nombrePaciente);
+                    DialogResult result = MessageBox.Show(
+                        $"El paciente '{nombrePaciente}' no existe. ¿Desea crearlo?",
+                        "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        idPaciente = Paciente.CrearPaciente(nombrePaciente);
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
 
                 if (cbDoctorGes.SelectedValue == null)
                 {
-                    MessageBox.Show("Seleccione un doctor.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Seleccione un doctor.", "Aviso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cbDoctorGes.Focus();
                     return;
                 }
                 int idDoctor = Convert.ToInt32(cbDoctorGes.SelectedValue);
@@ -375,9 +834,18 @@ namespace CapaPresentacioon
                 TimeSpan hora = dtpHoraGes.Value.TimeOfDay;
                 string motivo = tbMotivoGes.Text.Trim();
 
-                GestionDeCitas.EditarCita(idCita, idPaciente, idDoctor, fecha, hora, motivo);
-
-                MessageBox.Show("Cita actualizada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (modoEditar && idCitaSeleccionada > 0)
+                {
+                    GestionDeCitas.EditarCita(idCitaSeleccionada, idPaciente, idDoctor, fecha, hora, motivo);
+                    MessageBox.Show("Cita actualizada correctamente.", "Éxito",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    GestionDeCitas.AgendarCita(idPaciente, idDoctor, fecha, hora, motivo);
+                    MessageBox.Show("Cita agendada correctamente.", "Éxito",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
 
                 CargarCitas();
                 LimpiarCamposGestion();
@@ -391,13 +859,71 @@ namespace CapaPresentacioon
                 idCitaSeleccionada = 0;
                 SetCampos(false);
             }
-            catch (PacienteNoEncontradoException ex)
+            catch (HorarioNoDisponibleException ex)
             {
-                MessageBox.Show(ex.Message, "Error paciente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, "Horario no disponible",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (CitaDuplicadaException ex)
+            {
+                MessageBox.Show(ex.Message, "Conflicto de horario",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar la cita: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al guardar la cita: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnCancelarGes_Click(object sender, EventArgs e)
+        {
+            if (dgvGestion.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Seleccione una cita para cancelar.", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int idCita = Convert.ToInt32(dgvGestion.SelectedRows[0].Cells["IdCita"].Value);
+            string estadoActual = dgvGestion.SelectedRows[0].Cells["Estado"].Value.ToString();
+
+            if (estadoActual == "Cancelada")
+            {
+                MessageBox.Show("Esta cita ya está cancelada.", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            DialogResult dr = MessageBox.Show(
+                "¿Está seguro que desea cancelar esta cita?",
+                "Confirmar Cancelación",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (dr == DialogResult.Yes)
+            {
+                try
+                {
+                    GestionDeCitas.CancelarCita(idCita);
+                    MessageBox.Show("Cita cancelada correctamente.", "Éxito",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    CargarCitas();
+                    LimpiarCamposGestion();
+                    SetCampos(false);
+
+                    btnAgendarGes.Enabled = true;
+                    btnEditarGes.Enabled = true;
+                    btnCancelarGes.Enabled = true;
+                    btnGuardarGes.Enabled = false;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al cancelar la cita: {ex.Message}", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -405,97 +931,125 @@ namespace CapaPresentacioon
         {
             if (e.RowIndex < 0) return;
 
-            idCitaSeleccionada = Convert.ToInt32(dgvGestion.Rows[e.RowIndex].Cells["IdCita"].Value);
-            RecargarCita(idCitaSeleccionada);
+            try
+            {
+                idCitaSeleccionada = Convert.ToInt32(dgvGestion.Rows[e.RowIndex].Cells["IdCita"].Value);
+                RecargarCita(idCitaSeleccionada);
 
+                SetCampos(false);
+                btnAgendarGes.Enabled = true;
+                btnEditarGes.Enabled = true;
+                btnCancelarGes.Enabled = true;
+                btnGuardarGes.Enabled = false;
+                modoEditar = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al seleccionar la cita: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnCancelarGes_Click_1(object sender, EventArgs e)
+        {
+            if (dgvGestion.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Seleccione una cita para cancelar.", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int idCita = Convert.ToInt32(dgvGestion.SelectedRows[0].Cells["IdCita"].Value);
+            string estadoActual = dgvGestion.SelectedRows[0].Cells["Estado"].Value.ToString();
+
+            if (estadoActual == "Cancelada")
+            {
+                MessageBox.Show("Esta cita ya está cancelada.", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            DialogResult result = MessageBox.Show(
+                "¿Está seguro que desea cancelar esta cita?\n\n" +
+                "La cita cambiará su estado a 'Cancelada'.",
+                "Confirmar Cancelación de Cita",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    GestionDeCitas.CancelarCita(idCita);
+
+                    MessageBox.Show("Cita cancelada correctamente.", "Éxito",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    CargarCitas();
+                    LimpiarCamposGestion();
+                    SetCampos(false);
+
+                    idCitaSeleccionada = 0;
+                    modoEditar = false;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al cancelar la cita: {ex.Message}", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void btnCancelarOpeGes_Click(object sender, EventArgs e)
+        {
+            LimpiarCamposGestion();
             SetCampos(false);
+
             btnAgendarGes.Enabled = true;
             btnEditarGes.Enabled = true;
             btnCancelarGes.Enabled = true;
+            btnCancelarOpeGes.Enabled = false;
             btnGuardarGes.Enabled = false;
+
+            modoEditar = false;
+            idCitaSeleccionada = 0;
         }
 
-        private void materialButton1_Click(object sender, EventArgs e)
+        // ========================================================================
+        // VALIDACIONES KEYPRESS
+        // ========================================================================
+
+        private void tbNombreGes_KeyPress(object sender, KeyPressEventArgs e)
         {
-            try
+            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != ' ')
             {
-                string nombre = tbNombreDig.Text.Trim();
-                string descripcion = mtbDescripcionDig.Text.Trim();
-                DateTime fecha = dtpFechaDig.Value;
-
-                if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(descripcion))
-                {
-                    MessageBox.Show("Debe completar todos los campos.");
-                    return;
-                }
-
-                int idPaciente = GestionDeCitas.ObtenerIdPacientePorNombre(nombre);
-
-                DataTable citas = GestionDeCitas.MostrarCitas();
-                var citaPaciente = citas.AsEnumerable()
-                    .Where(r => r.Field<string>("Paciente") == nombre)
-                    .OrderByDescending(r => r.Field<DateTime>("Fecha"))
-                    .FirstOrDefault();
-
-                if (citaPaciente == null)
-                {
-                    MessageBox.Show("El paciente no tiene citas registradas.");
-                    return;
-                }
-
-                int idCita = Convert.ToInt32(citaPaciente["IdCita"]);
-
-                Diagnostico.GuardarDiagnostico(idCita, fecha, descripcion);
-
-                MessageBox.Show("Diagnóstico registrado correctamente.");
-                CargarDiagnosticos();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
+                e.Handled = true;
             }
         }
 
-        private void btnBuscarDig_Click(object sender, EventArgs e)
+        private void tbMotivoGes_KeyPress(object sender, KeyPressEventArgs e)
         {
-            try
+            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != ' ')
             {
-                string nombre = tbNombreDig.Text.Trim();
-
-                if (string.IsNullOrWhiteSpace(nombre))
-                {
-                    MessageBox.Show("Debe escribir un nombre.");
-                    return;
-                }
-
-                dgvDiagnosticos.DataSource = Diagnostico.BuscarDiagnosticoPorNombre(nombre);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
+                e.Handled = true;
             }
         }
 
-        private void btnFiltrarDig_Click(object sender, EventArgs e)
+        private void tbNombreDig_KeyPress(object sender, KeyPressEventArgs e)
         {
-            try
+            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != ' ')
             {
-                string nombre = tbNombreDig.Text.Trim();
-
-                if (string.IsNullOrWhiteSpace(nombre))
-                {
-                    MessageBox.Show("Ingrese un nombre para buscar.");
-                    return;
-                }
-
-                dgvDiagnosticos.DataSource = Diagnostico.BuscarDiagnosticoPorNombre(nombre);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error en la búsqueda: " + ex.Message);
+                e.Handled = true;
             }
         }
 
-        // Fin de la clase
+        private void mtbDescripcionDig_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != ' ')
+            {
+                e.Handled = true;
+            }
+        }
     }
 }
