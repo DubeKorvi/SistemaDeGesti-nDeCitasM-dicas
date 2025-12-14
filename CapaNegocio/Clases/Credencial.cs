@@ -19,7 +19,7 @@ namespace CapaNegocio.Clases
             {
                 using (SqlConnection con = new SqlConnection(ConexionBD.Cn))
                 {
-                    // ⭐ IMPORTANTE: Seleccionar también IdDoctor
+                    
                     SqlCommand cmd = new SqlCommand(
                         "SELECT IdCredencial, Usuario, Rol, IdDoctor FROM Credencial WHERE Usuario=@u AND Clave=@c",
                         con);

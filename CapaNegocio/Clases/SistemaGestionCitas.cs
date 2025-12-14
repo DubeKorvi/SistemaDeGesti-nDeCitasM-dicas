@@ -11,9 +11,7 @@ namespace CapaNegocio.Clases
 {
     public class SistemaGestionCitas: IAgendable, IDiagnosticable
     {
-        // Diccionario para manejar la agenda de citas por doctor
-        // Clave: ID del doctor
-        // Valor: Lista de citas del doctor
+        
         private readonly Dictionary<int, List<Cita2>> _agenda = new Dictionary<int, List<Cita2>>();
 
         // Lista de doctores registrados en el sistema
@@ -29,8 +27,8 @@ namespace CapaNegocio.Clases
         private readonly string[] _segurosMedicos = { "SeNaSa", "ARS Humano", "ARS Palic", "ARS Universal", "Particular" };
 
 
-        /// Constructor de la clase SistemaGestionCitas.
-        /// Inicializa los manejadores de eventos del sistema.
+        // Constructor de la clase SistemaGestionCitas.
+        // Inicializa los manejadores de eventos del sistema.
         public SistemaGestionCitas()
         {
             // Suscripción a eventos con expresiones lambda para manejo de notificaciones

@@ -11,9 +11,6 @@ namespace CapaNegocio.Clases
     public class EventosSistema
     {
         // Evento que se dispara cuando se agenda una nueva cita
-        // Parámetros: 
-        // - sender: El objeto que generó el evento (generalmente 'this')
-        // - string: Mensaje descriptivo del evento
         public event EventHandler<string> CitaAgendada;
 
         // Evento que se dispara cuando se cancela una cita
@@ -23,18 +20,12 @@ namespace CapaNegocio.Clases
         public event EventHandler<string> PacienteAtendido;
 
         // Método para disparar el evento CitaAgendada
-        // Parámetros:
-        // - mensaje: Descripción del evento de cita agendada
         public void OnCitaAgendada(string mensaje) => CitaAgendada?.Invoke(this, mensaje);
 
         // Método para disparar el evento CitaCancelada
-        // Parámetros:
-        // - mensaje: Descripción del evento de cita cancelada
         public void OnCitaCancelada(string mensaje) => CitaCancelada?.Invoke(this, mensaje);
 
-        // Método para disparar el evento PacienteAtendido
-        // Parámetros:
-        // - mensaje: Descripción del evento de paciente atendido
+        // Método para disparar el evento PacienteAtendid
         public void OnPacienteAtendido(string mensaje) => PacienteAtendido?.Invoke(this, mensaje);
     }
 }

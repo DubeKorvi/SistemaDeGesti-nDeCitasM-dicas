@@ -597,7 +597,7 @@ namespace CapaPresentacioon
                     string tabText = tab.Text.ToLower();
 
                     // Habilitar tabs para médicos
-                    if (tabName == "tabpage2" ||                          // Registrar Diagnóstico
+                    if (tabName == "tabpage2" ||                          
                         tabText.Contains("disponibilidad") ||
                         tabText.Contains("citas agendadas") ||
                         tabText.Contains("diagnostico"))
